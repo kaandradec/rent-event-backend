@@ -29,7 +29,6 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(token)
                 .build();
-
     }
 
     public AuthResponse register(RegisterRequest request) {
