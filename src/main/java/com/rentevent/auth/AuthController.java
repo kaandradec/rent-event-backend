@@ -13,18 +13,24 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping(value = "login")
+    @PostMapping(value = "user/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PostMapping(value = "register")
+    @PostMapping(value = "user/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
-    @GetMapping(value = "test")
-    public String test() {
-        return "Hola mundo";
+    @PostMapping(value = "/login")
+    public ResponseEntity<AuthResponse> loginClient(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.loginCliente(request));
     }
+
+    @PostMapping(value = "/register")
+    public ResponseEntity<AuthResponse> registerClient(@RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.registerCliente(request));
+    }
+
 }

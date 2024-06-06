@@ -1,5 +1,6 @@
-package com.rentevent.model.usuario;
+package com.rentevent.model.cliente;
 
+import com.rentevent.model.Genero;
 import com.rentevent.model.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,8 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,28 +19,29 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = {"usua_usuario"})})
-public class Usuario implements UserDetails {
+@Table(name = "cliente", uniqueConstraints = {@UniqueConstraint(columnNames = {"clie_usuario"})})
+public class Cliente implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
-    @SequenceGenerator(name = "seq_usuario", sequenceName = "seq_usuario", allocationSize = 1)
-    @Column(name = "usua_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_cliente")
+    @SequenceGenerator(name = "seq_cliente", sequenceName = "seq_cliente", allocationSize = 1)
+    @Column(name = "clie_id")
     private Integer id;
-    @Column(name = "usua_usuario", nullable = false)
+    @Column(name = "clie_usuario", nullable = false) // se refiere al correo
     private String username;
-    @Column(name = "usua_apellido")
+    @Column(name = "clie_apellido")
     private String lastname;
-    @Column(name = "usua_nombre")
+    @Column(name = "clie_nombre")
     private String firstname;
-    @Column(name = "usua_contrasenia")
+    @Column(name = "clie_contrasenia")
     private String password;
-    @Column(name = "usua_sueldo")
-    private BigDecimal sueldo;
-    @Column(name = "usua_fecha_incorporacion")
-    private LocalDate fechaIncormporacion;
-
+    @Column(name = "clie_nacionalidad")
+    private String nacionalidad;
+    @Column(name = "clie_direccion")
+    private String direccion;
+    @Column(name = "clie_genero")
+    private Genero genero;
     @Enumerated(EnumType.STRING)
-    @Column(name = "usua_rol")
+    @Column(name = "clie_rol")
     private Role role;
 
     @Override
