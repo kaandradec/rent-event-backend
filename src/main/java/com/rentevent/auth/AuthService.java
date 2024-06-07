@@ -38,13 +38,9 @@ public class AuthService {
     }
 
     public AuthResponse loginCliente(LoginRequest request) {
-        System.out.println(request.getUsername());
-        System.out.println(request.getPassword());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        System.out.println("PASSSSS");
         UserDetails client = clienteRepository.findByUsername(request.getUsername()).orElseThrow();
         String token = jwtService.getToken(client);
-        System.out.println("CLIENTE: " + client);
 
         Cliente cliente = clienteRepository.findByUsername(request.getUsername()).orElseThrow();
         return AuthResponse.builder()
