@@ -3,17 +3,15 @@ package com.rentevent.auth;
 import com.rentevent.jwt.JwtService;
 import com.rentevent.model.Role;
 import com.rentevent.model.cliente.Cliente;
-import com.rentevent.repository.IClienteRepository;
-import com.rentevent.repository.UserRepository;
 import com.rentevent.model.usuario.Usuario;
+import com.rentevent.repository.IClienteRepository;
+import com.rentevent.repository.IUsuarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -21,7 +19,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final IUsuarioRepository userRepository;
     private final IClienteRepository clienteRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
@@ -36,6 +34,22 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(token)
                 .role(usuario.getRole().name())
+                .build();
+    }
+
+    public AuthResponse loginCliente(LoginRequest request) {
+        System.out.println(request.getUsername());
+        System.out.println(request.getPassword());
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        System.out.println("PASSSSS");
+        UserDetails client = clienteRepository.findByUsername(request.getUsername()).orElseThrow();
+        String token = jwtService.getToken(client);
+        System.out.println("CLIENTE: " + client);
+
+        Cliente cliente = clienteRepository.findByUsername(request.getUsername()).orElseThrow();
+        return AuthResponse.builder()
+                .token(token)
+                .role(cliente.getRole().name())
                 .build();
     }
 
@@ -57,21 +71,6 @@ public class AuthService {
 
     }
 
-    public AuthResponse loginCliente(LoginRequest request) {
-        System.out.println(request.getUsername());
-        System.out.println(request.getPassword());
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        System.out.println("PASSSSS");
-        UserDetails client= clienteRepository.findByUsername(request.getUsername()).orElseThrow();
-        String token = jwtService.getToken(client);
-        System.out.println("CLIENTE: " + client);
-
-        Cliente cliente = clienteRepository.findByUsername(request.getUsername()).orElseThrow();
-        return AuthResponse.builder()
-                .token(token)
-                .role(cliente.getRole().name())
-                .build();
-    }
 
     public AuthResponse registerCliente(RegisterRequest request) {
         Cliente cliente = Cliente.builder()
