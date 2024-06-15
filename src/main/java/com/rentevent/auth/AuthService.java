@@ -34,6 +34,9 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(token)
                 .role(usuario.getRole().name())
+                .username(usuario.getUsername())
+                .firstname(usuario.getFirstname())
+                .lastname(usuario.getLastname())
                 .build();
     }
 
@@ -46,6 +49,9 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(token)
                 .role(cliente.getRole().name())
+                .username(cliente.getUsername())
+                .firstname(cliente.getFirstname())
+                .lastname(cliente.getLastname())
                 .build();
     }
 

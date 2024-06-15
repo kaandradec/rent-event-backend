@@ -12,12 +12,12 @@ import java.util.Optional;
 public interface IServicioRepository extends JpaRepository<Servicio, Integer> {
 
     Optional<Servicio> findByCodigo(String codigo);
+
     @Modifying() // Se usa para indicar que la consulta modificará datos
-    @Query("update Servicio s set s.nombre=:nombre, s.tipo=:tipo, s.precio=:precio, s.descripcion=:descripcion," +
-            " s.personalizacion=:personalizacion, s.imagen=:imagen where s.codigo =:codigo")
+    @Query("update Servicio s set s.nombre=:nombre, s.tipo=:tipo, s.costo=:costo, s.descripcion=:descripcion," +
+            " s.imagen=:imagen where s.codigo =:codigo")
     void updateServicio(
-            @Param(value = "nombre") String nombre, @Param(value = "tipo") String tipo ,
-            @Param(value = "precio") BigDecimal precio, @Param(value = "descripcion") String descripcion,
-            @Param(value = "personalizacion") String personalizacion, @Param(value = "imagen") String imagen,
-            @Param(value = "codigo") String codigo );
+            @Param(value = "nombre") String nombre, @Param(value = "tipo") String tipo,
+            @Param(value = "costo") BigDecimal costo, @Param(value = "descripcion") String descripcion, @Param(value = "imagen") String imagen,
+            @Param(value = "codigo") String codigo);
 }

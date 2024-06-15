@@ -22,17 +22,15 @@ public class ServicioService {
                 .codigo(servicioRequest.getCodigo())
                 .nombre(servicioRequest.getNombre())
                 .tipo(servicioRequest.getTipo())
-                .precio(servicioRequest.getPrecio())
+                .costo(servicioRequest.getPrecio())
                 .descripcion(servicioRequest.getDescripcion())
-                .personalizacion(servicioRequest.getPersonalizacion())
                 .imagen(servicioRequest.getImagen())
                 .build();
 
 
         // servicioRepository.updateUser(servicio.id, servicio.firstname, servicio.lastname, servicio.country);
         servicioRepository.updateServicio(
-                servicio.getNombre(), servicio.getTipo(), servicio.getPrecio(), servicio.getDescripcion(),
-                servicio.getPersonalizacion(), servicio.getImagen(), servicio.getCodigo());
+                servicio.getNombre(), servicio.getTipo(), servicio.getCosto(), servicio.getDescripcion(), servicio.getImagen(), servicio.getCodigo());
 
         return new ServicioResponse("El servicio se registró satisfactoriamente");
     }
@@ -45,9 +43,8 @@ public class ServicioService {
                     .codigo(servicio.getCodigo())
                     .nombre(servicio.getNombre())
                     .tipo(servicio.getTipo())
-                    .precio(servicio.getPrecio())
+                    .costo(servicio.getCosto())
                     .descripcion(servicio.getDescripcion())
-                    .personalizacion(servicio.getPersonalizacion())
                     .imagen(servicio.getImagen())
                     .build();
             return servicioDTO;

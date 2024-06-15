@@ -15,7 +15,7 @@ public class ServicioDTO {
     private String codigo;
     private String nombre;
     private String tipo;
-    private BigDecimal precio;
+    private BigDecimal costo;
     private String descripcion;
     private String personalizacion;
     private String imagen;
