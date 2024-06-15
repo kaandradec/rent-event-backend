@@ -2,13 +2,12 @@ package com.rentevent.model.imagen;
 
 import com.rentevent.model.servicio.Servicio;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -23,8 +22,14 @@ public class Imagen {
     @Column(name = "img_url", nullable = false)
     private String url;
 
-    @Column(name = "img_descripcion", nullable = false)
-    private String descripcion;
+    @Column(name = "img_nombre", nullable = false)
+    private String nombre;
+
+    @Column(name = "img_id_publica", nullable = false)
+    private String idPublica;
+
+    @Column(name = "img_descripcion")
+    private String descripcion;// TODO Eliminar atributo, la descripción se encuentra en la tabla de servicios
 
     @Column(name = "img_etiqueta", nullable = false)
     private String etiqueta;
@@ -32,4 +37,13 @@ public class Imagen {
     @ManyToOne
     @JoinColumn(name = "img_serv_id")
     private Servicio servicio;
+
+    public Imagen(String url, String nombre, String idPublica, String descripcion, String etiqueta, Servicio servicio) {
+        this.url = url;
+        this.nombre = nombre;
+        this.idPublica = idPublica;
+        this.descripcion = descripcion;
+        this.etiqueta = etiqueta;
+        this.servicio = servicio;
+    }
 }

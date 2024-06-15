@@ -35,15 +35,12 @@ public class Servicio {
     private BigDecimal costo;
     @Column(name = "serv_descripcion")
     private String descripcion;
-    @Column(name = "serv_imagen")
-    private String imagen;//todo reemplazar el mock
-
-    @OneToMany(mappedBy = "servicio")
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
     private List<Imagen> imagenes;
     @OneToMany(mappedBy = "servicio")
     private List<EventoServicio> eventos;
     @ManyToOne
-    @JoinColumn(name = "prov_id", nullable = false)
+    @JoinColumn(name = "prov_id")
     private Proveedor proveedor;
 
 }

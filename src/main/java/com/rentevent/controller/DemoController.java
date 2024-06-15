@@ -36,8 +36,8 @@ public class DemoController {
         return ResponseEntity.ok(servicioDTO);
     }
 
-    @PutMapping()
-    public ResponseEntity<ServicioResponse> updateService(@RequestBody ServicioRequest servicioRequest) {
-        return ResponseEntity.ok(servicioService.updateService(servicioRequest));
-    }
+//    @PutMapping()
+//    public ResponseEntity<ServicioResponse> updateService(@RequestBody ServicioRequest servicioRequest) {
+//        return ResponseEntity.ok(servicioService.updateService(servicioRequest));
+//    }
 }
