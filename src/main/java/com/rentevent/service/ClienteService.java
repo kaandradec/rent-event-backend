@@ -12,19 +12,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ClienteService {
-    private final EntityManager entityManager;
     private final IClienteRepository clienteRepository;
 
-//    public ClienteResponse getUserByUsername(String username) {
-//        System.out.println(username);
-//
-//        return new ClienteResponse(this.entityManager
-//                .createQuery("SELECT v FROM Cliente v WHERE v.username=:username", Cliente.class)
-//                .setParameter("username", username)
-//                .getResultList().get(0));
-//    }
-
     public Optional<Cliente> obtenerClientePorUsername(String username) {
-        return clienteRepository.findByUsername(username);
+        return clienteRepository.findByCorreo(username);
     }
 }

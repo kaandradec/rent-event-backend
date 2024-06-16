@@ -44,11 +44,11 @@ public class ApplicationConfig {
     public UserDetailsService userDetailService() {
 
         return (username) -> {
-            Usuario usuario = userRepository.findByUsername(username).orElse(null);
+            Usuario usuario = userRepository.findByCorreo(username).orElse(null);
             if (usuario != null) {
                 return usuario;
             }
-            return clienteRepository.findByUsername(username)
+            return clienteRepository.findByCorreo(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         };
     }

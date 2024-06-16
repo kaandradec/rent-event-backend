@@ -1,5 +1,8 @@
 package com.rentevent.auth;
 
+import com.rentevent.dto.request.LoginRequest;
+import com.rentevent.dto.request.RegisterRequest;
+import com.rentevent.dto.response.AuthResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

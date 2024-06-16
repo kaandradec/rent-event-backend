@@ -1,4 +1,4 @@
-package com.rentevent.auth;
+package com.rentevent.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequest {
-    String username;
-    String password;
-    String firstname;
-    String lastname;
+public class AuthResponse {
+    String token;
+    String rol;
+    String correo;
+    String nombre;
+    String apellido;
 }

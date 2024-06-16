@@ -28,22 +28,11 @@ public class Imagen {
     @Column(name = "img_id_publica", nullable = false)
     private String idPublica;
 
-    @Column(name = "img_descripcion")
-    private String descripcion;// TODO Eliminar atributo, la descripción se encuentra en la tabla de servicios
-
-    @Column(name = "img_etiqueta", nullable = false)
+     @Column(name = "img_etiqueta", nullable = false)
     private String etiqueta;
 
     @ManyToOne
     @JoinColumn(name = "img_serv_id")
     private Servicio servicio;
 
-    public Imagen(String url, String nombre, String idPublica, String descripcion, String etiqueta, Servicio servicio) {
-        this.url = url;
-        this.nombre = nombre;
-        this.idPublica = idPublica;
-        this.descripcion = descripcion;
-        this.etiqueta = etiqueta;
-        this.servicio = servicio;
-    }
 }

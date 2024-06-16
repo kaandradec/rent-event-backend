@@ -1,9 +1,9 @@
 package com.rentevent.model.usuario;
 
-import com.rentevent.model.Role;
+import com.rentevent.model.Genero;
+import com.rentevent.model.Rol;
 import com.rentevent.model.incidencia.Incidencia;
 import com.rentevent.model.pregunta_segura.PreguntaSegura;
-import com.rentevent.model.rol.Rol;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,35 +32,42 @@ public class Usuario implements UserDetails {
     private Integer id;
     @Column(name = "usua_correo", nullable = false)
     private String correo;
-    @Column(name = "usua_usuario", nullable = false)
-    private String username;
     @Column(name = "usua_contrasenia")
-    private String password;
-
+    private String contrasenia;
     @Column(name = "usua_apellido")
-    private String lastname;
+    private String apellido;
     @Column(name = "usua_nombre")
-    private String firstname;
+    private String nombre;
     @Column(name = "usua_sueldo")
     private BigDecimal sueldo;
     @Column(name = "usua_fecha_incorporacion")
     private LocalDate fechaIncormporacion;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "usua_rol")
-    private Role role;
-
-    @ManyToOne
-    @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "usua_genero")
+    private Genero genero;
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PreguntaSegura> preguntasSeguras;
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Incidencia> incidencias;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(rol.name()));
     }
+
+    @Override
+    public String getPassword() {
+        return contrasenia;
+    }
+
+    @Override
+    public String getUsername() {
+        return correo;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -80,4 +87,5 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

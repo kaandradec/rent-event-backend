@@ -1,4 +1,4 @@
-package com.rentevent.auth;
+package com.rentevent.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
-    String username;
-    String password;
+    String correo;
+    String contrasenia;
 }

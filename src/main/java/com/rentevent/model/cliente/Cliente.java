@@ -1,7 +1,7 @@
 package com.rentevent.model.cliente;
 
 import com.rentevent.model.Genero;
-import com.rentevent.model.Role;
+import com.rentevent.model.Rol;
 import com.rentevent.model.evento.Evento;
 import com.rentevent.model.factura.Factura;
 import com.rentevent.model.pregunta_segura.PreguntaSegura;
@@ -30,34 +30,24 @@ public class Cliente implements UserDetails {
     @SequenceGenerator(name = "seq_cliente", sequenceName = "seq_cliente", allocationSize = 1)
     @Column(name = "clie_id")
     private Integer id;
-
-    @Column(name = "clie_usuario", nullable = false) // se refiere al correo
-    private String username;
-
-    @Column(name = "clie_apellido")
-    private String lastname;
-
     @Column(name = "clie_nombre")
-    private String firstname;
-
+    private String nombre;
+    @Column(name = "clie_apellido")
+    private String apellido;
     @Column(name = "clie_contrasenia")
-    private String password;
-
+    private String contrasenia;
     @Column(name = "clie_nacionalidad")
     private String nacionalidad;
-
     @Column(name = "clie_correo")
     private String correo;
-
     @Column(name = "clie_direccion")
     private String direccion;
-
+    @Enumerated(EnumType.STRING)
     @Column(name = "clie_genero")
     private Genero genero;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "clie_rol")
-    private Role role;
+    private Rol rol;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Factura> facturas;
@@ -70,7 +60,17 @@ public class Cliente implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(rol.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return contrasenia;
+    }
+
+    @Override
+    public String getUsername() {
+        return correo;
     }
 
     @Override

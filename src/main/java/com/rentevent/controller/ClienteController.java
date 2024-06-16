@@ -2,13 +2,10 @@ package com.rentevent.controller;
 
 import com.rentevent.dto.response.ClienteResponse;
 import com.rentevent.model.cliente.Cliente;
-import com.rentevent.model.servicio.ServicioResponse;
 import com.rentevent.service.ClienteService;
-import com.rentevent.service.ServicioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/clientes")
@@ -24,8 +21,8 @@ public class ClienteController {
 
         ClienteResponse clienteResponse = ClienteResponse.builder()
                 .correo(cliente.getUsername())
-                .nombre(cliente.getFirstname())
-                .apellido(cliente.getLastname())
+                .nombre(cliente.getNombre())
+                .apellido(cliente.getApellido())
                 .nacionalidad(cliente.getNacionalidad())
                 .genero(cliente.getGenero())
                 .direccion(cliente.getDireccion())

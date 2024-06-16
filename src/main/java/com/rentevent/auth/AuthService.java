@@ -1,7 +1,10 @@
 package com.rentevent.auth;
 
+import com.rentevent.dto.request.LoginRequest;
+import com.rentevent.dto.request.RegisterRequest;
+import com.rentevent.dto.response.AuthResponse;
 import com.rentevent.jwt.JwtService;
-import com.rentevent.model.Role;
+import com.rentevent.model.Rol;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.usuario.Usuario;
 import com.rentevent.repository.IClienteRepository;
@@ -26,43 +29,43 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getCorreo(), request.getContrasenia()));
+        UserDetails user = userRepository.findByCorreo(request.getCorreo()).orElseThrow();
         String token = jwtService.getToken(user);
 
-        Usuario usuario = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        Usuario usuario = userRepository.findByCorreo(request.getCorreo()).orElseThrow();
         return AuthResponse.builder()
                 .token(token)
-                .role(usuario.getRole().name())
-                .username(usuario.getUsername())
-                .firstname(usuario.getFirstname())
-                .lastname(usuario.getLastname())
+                .rol(usuario.getRol().name())
+                .correo(usuario.getUsername())
+                .nombre(usuario.getNombre())
+                .apellido(usuario.getApellido())
                 .build();
     }
 
     public AuthResponse loginCliente(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        UserDetails client = clienteRepository.findByUsername(request.getUsername()).orElseThrow();
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getCorreo(), request.getContrasenia()));
+        UserDetails client = clienteRepository.findByCorreo(request.getCorreo()).orElseThrow();
         String token = jwtService.getToken(client);
 
-        Cliente cliente = clienteRepository.findByUsername(request.getUsername()).orElseThrow();
+        Cliente cliente = clienteRepository.findByCorreo(request.getCorreo()).orElseThrow();
         return AuthResponse.builder()
                 .token(token)
-                .role(cliente.getRole().name())
-                .username(cliente.getUsername())
-                .firstname(cliente.getFirstname())
-                .lastname(cliente.getLastname())
+                .rol(cliente.getRol().name())
+                .correo(cliente.getCorreo())
+                .nombre(cliente.getNombre())
+                .apellido(cliente.getApellido())
                 .build();
     }
 
     public AuthResponse register(RegisterRequest request) {
         Usuario user = Usuario.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .firstname(request.getFirstname())
-                .lastname(request.lastname)
+                .correo(request.getCorreo())
+                .contrasenia(passwordEncoder.encode(request.getContrasenia()))
+                .nombre(request.getNombre())
+                .apellido(request.getApellido())
                 .fechaIncormporacion(LocalDate.now())
-                .role(Role.USUARIO)
+                .rol(Rol.USUARIO)
                 .build();
 
         userRepository.save(user);
@@ -76,11 +79,11 @@ public class AuthService {
 
     public AuthResponse registerCliente(RegisterRequest request) {
         Cliente cliente = Cliente.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .firstname(request.getFirstname())
-                .lastname(request.lastname)
-                .role(Role.CLIENTE)
+                .correo(request.getCorreo())
+                .contrasenia(passwordEncoder.encode(request.getContrasenia()))
+                .nombre(request.getNombre())
+                .apellido(request.getApellido())
+                .rol(Rol.CLIENTE)
                 .build();
 
         clienteRepository.save(cliente);

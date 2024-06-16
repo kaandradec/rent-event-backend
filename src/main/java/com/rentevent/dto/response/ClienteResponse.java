@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClienteResponse {
+
     private String nombre;
     private String apellido;
     private String nacionalidad;
     private Genero genero;
     private String correo;
     private String direccion;
-    // Getters y setters
 }
 

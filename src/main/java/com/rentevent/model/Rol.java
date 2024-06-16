@@ -1,6 +1,6 @@
 package com.rentevent.model;
 
-public enum Role {
+public enum Rol {
     CLIENTE,
     USUARIO,
     ADMIN,
