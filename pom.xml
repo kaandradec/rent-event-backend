@@ -89,7 +89,6 @@
             <artifactId>cloudinary-http45</artifactId>
             <version>1.34.0</version>
         </dependency>
-
     </dependencies>
 
     <build>

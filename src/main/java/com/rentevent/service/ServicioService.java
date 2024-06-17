@@ -1,26 +1,30 @@
 package com.rentevent.service;
 
+import com.rentevent.dto.request.ServicioRequest;
 import com.rentevent.dto.response.CloudinaryResponse;
 import com.rentevent.exception.NotFoundException;
 import com.rentevent.model.imagen.Imagen;
+import com.rentevent.model.proveedor.Proveedor;
 import com.rentevent.model.servicio.Servicio;
-import com.rentevent.model.servicio.ServicioDTO;
-import com.rentevent.model.servicio.ServicioRequest;
 import com.rentevent.model.servicio.ServicioResponse;
+import com.rentevent.repository.IProveedorRepository;
 import com.rentevent.repository.IServicioRepository;
 import com.rentevent.util.FileUploadUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 // Lombok genera un constructor con los atributos marcados como final, hace que no sea necesario inyectar las dependencias con @Autowired
 public class ServicioService {
     private final IServicioRepository servicioRepository;
+    private final IProveedorRepository proveedorRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
 
@@ -43,11 +47,11 @@ public class ServicioService {
 //        return new ServicioResponse("El servicio se registró satisfactoriamente");
 //    }
 
-    public ServicioDTO getService(String codigo) {
+    public ServicioResponse getService(String codigo) {
         Servicio servicio = servicioRepository.findByCodigo(codigo).orElse(null);
 
         if (servicio != null) {
-            ServicioDTO servicioDTO = ServicioDTO.builder()
+            ServicioResponse servicioDTO = ServicioResponse.builder()
                     .codigo(servicio.getCodigo())
                     .nombre(servicio.getNombre())
                     .tipo(servicio.getTipo())
@@ -57,6 +61,10 @@ public class ServicioService {
             return servicioDTO;
         }
         return null;
+    }
+
+    public List<Servicio> obtenerServicios() {
+        return this.servicioRepository.findAll();
     }
 
     public ServicioResponse obtenerServicioPorId(Integer id) {
@@ -74,8 +82,49 @@ public class ServicioService {
     }
 
     @Transactional
-    public void subirImagen(final Integer id, final MultipartFile file) {
-        final Servicio servicio = this.servicioRepository.findById(id).orElseThrow(() -> new NotFoundException("Servicio no encontrado"));
+    public void guardarServicio(ServicioRequest servicioRequest, MultipartFile file) {
+        UUID uuid = UUID.randomUUID();
+        System.out.println(uuid.toString());
+
+        Proveedor proveedor = this.proveedorRepository.findByNombre(servicioRequest.getProveedor()).orElseThrow(() -> new NotFoundException("Proveedor no encontrado"));
+
+        Imagen imagen = subirImagenACloudinary(file);
+        imagen.setEtiqueta("SERVICIO");
+
+        Servicio servicio = Servicio.builder()
+                .codigo("SERV-" + uuid.toString().substring(0, 8))
+                .nombre(servicioRequest.getNombre())
+                .tipo(servicioRequest.getTipo())
+                .costo(servicioRequest.getCosto())
+                .estado(servicioRequest.getEstado())
+                .descripcion(servicioRequest.getDescripcion())
+                .proveedor(proveedor)
+                .imagenes(List.of(imagen))
+                .build();
+
+        imagen.setServicio(servicio);
+        proveedor.getServicios().add(servicio);
+
+        this.servicioRepository.save(servicio);
+    }
+
+    @Transactional
+    public Imagen subirImagenACloudinary(final MultipartFile file) {
+        FileUploadUtil.assertAllowed(file, FileUploadUtil.IMAGE_PATTERN);
+        final String fileName = FileUploadUtil.getFileName(file.getOriginalFilename());
+        final CloudinaryResponse response = this.cloudinaryService.uploadFile(file, fileName);
+
+        ;
+        return Imagen.builder()
+                .url(response.getUrl())
+                .nombre(fileName)
+                .idPublica(response.getPublicId())
+                .build();
+    }
+
+    @Transactional
+    public void subirImagenParaServicio(final Integer idServicio, final MultipartFile file) {
+        final Servicio servicio = this.servicioRepository.findById(idServicio).orElseThrow(() -> new NotFoundException("Servicio no encontrado"));
         if (servicio == null) {
             throw new RuntimeException("Servicio no encontrado");
         }
@@ -96,4 +145,5 @@ public class ServicioService {
 
         this.servicioRepository.save(servicio);
     }
+
 }

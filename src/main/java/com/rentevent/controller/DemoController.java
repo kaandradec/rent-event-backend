@@ -28,12 +28,12 @@ public class DemoController {
     }
 
     @GetMapping(value = "{codigo}")
-    public ResponseEntity<ServicioDTO> getServicio(@PathVariable String codigo) {
-        ServicioDTO servicioDTO = servicioService.getService(codigo);
-        if (servicioDTO == null) {
+    public ResponseEntity<ServicioResponse> getServicio(@PathVariable String codigo) {
+        ServicioResponse servicioResponse = servicioService.getService(codigo);
+        if (servicioResponse == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(servicioDTO);
+        return ResponseEntity.ok(servicioResponse);
     }
 
 //    @PutMapping()
