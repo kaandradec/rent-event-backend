@@ -1,5 +1,6 @@
 package com.rentevent.dto.request;
 
+import com.rentevent.model.Genero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,8 @@ public class RegisterRequest {
     String contrasenia;
     String nombre;
     String apellido;
+    Genero genero;
+    String prefijo;
+    String telefono;
+
 }

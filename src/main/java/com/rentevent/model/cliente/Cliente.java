@@ -36,12 +36,12 @@ public class Cliente implements UserDetails {
     private String apellido;
     @Column(name = "clie_contrasenia")
     private String contrasenia;
-    @Column(name = "clie_nacionalidad")
-    private String nacionalidad;
+    @Column(name = "clie_telefono")
+    private String telefono;
+    @Column(name = "clie_prefijo")
+    private String prefijo;
     @Column(name = "clie_correo")
     private String correo;
-    @Column(name = "clie_direccion")
-    private String direccion;
     @Enumerated(EnumType.STRING)
     @Column(name = "clie_genero")
     private Genero genero;

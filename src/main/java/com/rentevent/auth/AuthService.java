@@ -78,11 +78,16 @@ public class AuthService {
 
 
     public AuthResponse registerCliente(RegisterRequest request) {
+
+        System.out.println(request.toString());
         Cliente cliente = Cliente.builder()
                 .correo(request.getCorreo())
                 .contrasenia(passwordEncoder.encode(request.getContrasenia()))
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
+                .prefijo(request.getPrefijo())
+                .telefono(request.getTelefono())
+                .genero(request.getGenero())
                 .rol(Rol.CLIENTE)
                 .build();
 

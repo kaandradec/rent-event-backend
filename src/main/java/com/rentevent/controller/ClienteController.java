@@ -23,9 +23,8 @@ public class ClienteController {
                 .correo(cliente.getUsername())
                 .nombre(cliente.getNombre())
                 .apellido(cliente.getApellido())
-                .nacionalidad(cliente.getNacionalidad())
+                .telefono(cliente.getTelefono())
                 .genero(cliente.getGenero())
-                .direccion(cliente.getDireccion())
                 .build();
 
         return ResponseEntity.ok(clienteResponse);
