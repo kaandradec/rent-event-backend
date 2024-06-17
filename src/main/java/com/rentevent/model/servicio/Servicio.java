@@ -1,5 +1,8 @@
 package com.rentevent.model.servicio;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.rentevent.model.EstadoServicio;
+import com.rentevent.model.TipoServicio;
 import com.rentevent.model.evento.EventoServicio;
 import com.rentevent.model.imagen.Imagen;
 import com.rentevent.model.proveedor.Proveedor;
@@ -30,17 +33,21 @@ public class Servicio {
     @Column(name = "serv_nombre")
     private String nombre;
     @Column(name = "serv_tipo")
-    private String tipo;
+    private TipoServicio tipo;
+    @Column(name = "serv_estado")
+    private EstadoServicio estado;
     @Column(name = "serv_costo")
     private BigDecimal costo;
     @Column(name = "serv_descripcion")
     private String descripcion;
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Imagen> imagenes;
     @OneToMany(mappedBy = "servicio")
     private List<EventoServicio> eventos;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prov_id")
+    @JsonManagedReference
     private Proveedor proveedor;
 
 }

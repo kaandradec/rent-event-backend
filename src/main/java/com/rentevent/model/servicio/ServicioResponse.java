@@ -1,5 +1,6 @@
 package com.rentevent.model.servicio;
 
+import com.rentevent.model.TipoServicio;
 import com.rentevent.model.evento.EventoServicio;
 import com.rentevent.model.imagen.Imagen;
 import com.rentevent.model.proveedor.Proveedor;
@@ -22,7 +23,7 @@ import java.util.List;
 public class ServicioResponse {
     private String codigo;
     private String nombre;
-    private String tipo;
+    private TipoServicio tipo;
     private BigDecimal costo;
     private String descripcion;
     private List<Imagen> imagenes;

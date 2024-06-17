@@ -1,5 +1,6 @@
 package com.rentevent.model.imagen;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rentevent.model.servicio.Servicio;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,11 +29,12 @@ public class Imagen {
     @Column(name = "img_id_publica", nullable = false)
     private String idPublica;
 
-     @Column(name = "img_etiqueta", nullable = false)
+    @Column(name = "img_etiqueta", nullable = false)
     private String etiqueta;
 
     @ManyToOne
     @JoinColumn(name = "img_serv_id")
+    @JsonBackReference
     private Servicio servicio;
 
 }
