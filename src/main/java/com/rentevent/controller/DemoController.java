@@ -27,14 +27,14 @@ public class DemoController {
         return ResponseEntity.ok("API-KEY desde archivo .env -> " + apiKey);
     }
 
-    @GetMapping(value = "{codigo}")
-    public ResponseEntity<ServicioResponse> getServicio(@PathVariable String codigo) {
-        ServicioResponse servicioResponse = servicioService.getService(codigo);
-        if (servicioResponse == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(servicioResponse);
-    }
+//    @GetMapping(value = "{codigo}")
+//    public ResponseEntity<ServicioResponse> getServicio(@PathVariable String codigo) {
+//        ServicioResponse servicioResponse = servicioService.getService(codigo);
+//        if (servicioResponse == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(servicioResponse);
+//    }
 
 //    @PutMapping()
 //    public ResponseEntity<ServicioResponse> updateService(@RequestBody ServicioRequest servicioRequest) {

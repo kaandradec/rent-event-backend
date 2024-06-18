@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface IImagenRepository extends JpaRepository<Imagen, Integer> {
     List<Imagen> findByOrderById();
 
+    void deleteByIdPublica(String idPublica);
+
 }

@@ -23,6 +23,7 @@ import java.util.List;
 public class ServicioResponse {
     private String codigo;
     private String nombre;
+    private String estado;
     private TipoServicio tipo;
     private BigDecimal costo;
     private String descripcion;

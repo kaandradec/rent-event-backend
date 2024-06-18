@@ -20,10 +20,9 @@ import java.math.BigDecimal;
 // Permite el acceso a los recursos desde el servidor local de React: Vite -> http://localhost:5173
 public class ServicioController {
     private final ServicioService servicioService;
-
-    @GetMapping(value = "{id}")
-    public ResponseEntity<ServicioResponse> getServicio(@PathVariable Integer id) {
-        ServicioResponse servicio = servicioService.obtenerServicioPorId(id);
+    @GetMapping(value = "{codigo}")
+    public ResponseEntity<ServicioResponse> getServicio(@PathVariable String codigo) {
+        ServicioResponse servicio = servicioService.obtenerServicioPorCodigo(codigo);
         if (servicio == null) {
             return ResponseEntity.notFound().build();
         }
@@ -62,10 +61,33 @@ public class ServicioController {
         return ResponseEntity.ok("Servicio creado satisfactoriamente");
     }
 
-//    @PutMapping()
-//    public ResponseEntity<ServicioResponse> updateService(@RequestBody ServicioRequest servicioRequest) {
-//        return ResponseEntity.ok(servicioService.updateService(servicioRequest));
-//    }
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<?> updateService(
+            @PathVariable String codigo,
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("nombre") String nombre,
+            @RequestPart("tipo") String tipo,
+            @RequestPart("costo") String costo,
+            @RequestPart("descripcion") String descripcion,
+            @RequestPart("estado") String estado,
+            @RequestPart("proveedor") String proveedor
+    ) {
+        EstadoServicio estadoServicio = EstadoServicio.valueOf(estado);
+        TipoServicio tipoServicio = TipoServicio.valueOf(tipo);
+        BigDecimal costoBigDecimal = new BigDecimal(costo);
+        ServicioRequest servicioRequest = ServicioRequest.builder()
+                .nombre(nombre)
+                .costo(costoBigDecimal)
+                .descripcion(descripcion)
+                .estado(estadoServicio)
+                .proveedor(proveedor)
+                .tipo(tipoServicio)
+                .build();
+        servicioService.actualizarServicio(codigo, servicioRequest, file);
+
+        return ResponseEntity.ok("Servicio actualizado satisfactoriamente");
+    }
+
 
     @PostMapping("/imagen/{id}")
     public ResponseEntity<?> subirImagen(@PathVariable Integer id, @RequestPart final MultipartFile file) {
