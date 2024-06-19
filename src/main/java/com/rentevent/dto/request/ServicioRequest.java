@@ -21,4 +21,5 @@ public class ServicioRequest {
     private EstadoServicio estado;
     private TipoServicio tipo;
     private String proveedor;
+    private String idPublica;
 }

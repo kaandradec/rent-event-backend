@@ -44,7 +44,7 @@ public class CloudinaryService {
             final Map result = this.cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
             return (String) result.get("result");
         } catch (Exception e) {
-            throw new FuncErrorException("Error deleting file");
+            throw new FuncErrorException(">>>>>Error deleting file");
         }
     }
 

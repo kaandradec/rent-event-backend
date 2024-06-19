@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/servicios")
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 // Permite el acceso a los recursos desde el servidor local de React: Vite -> http://localhost:5173
 public class ServicioController {
     private final ServicioService servicioService;
+
     @GetMapping(value = "{codigo}")
     public ResponseEntity<ServicioResponse> getServicio(@PathVariable String codigo) {
         ServicioResponse servicio = servicioService.obtenerServicioPorCodigo(codigo);
@@ -61,10 +63,10 @@ public class ServicioController {
         return ResponseEntity.ok("Servicio creado satisfactoriamente");
     }
 
-    @PutMapping("/actualizar/{id}")
+    @PutMapping("/actualizar/{codigo}")
     public ResponseEntity<?> updateService(
             @PathVariable String codigo,
-            @RequestPart("file") MultipartFile file,
+            @RequestPart(value = "file") MultipartFile file,
             @RequestPart("nombre") String nombre,
             @RequestPart("tipo") String tipo,
             @RequestPart("costo") String costo,
@@ -72,6 +74,7 @@ public class ServicioController {
             @RequestPart("estado") String estado,
             @RequestPart("proveedor") String proveedor
     ) {
+
         EstadoServicio estadoServicio = EstadoServicio.valueOf(estado);
         TipoServicio tipoServicio = TipoServicio.valueOf(tipo);
         BigDecimal costoBigDecimal = new BigDecimal(costo);

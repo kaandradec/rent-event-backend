@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -105,12 +106,38 @@ public class ServicioService {
     @Transactional
     public void actualizarServicio(String codigo, ServicioRequest servicioRequest, MultipartFile file) {
         Servicio servicio = this.servicioRepository.findByCodigo(codigo).orElseThrow(() -> new NotFoundException("Servicio no encontrado"));
-
+        System.out.println("Servicio: " + servicio.getNombre());
         Proveedor proveedor = this.proveedorRepository.findByNombre(servicioRequest.getProveedor()).orElseThrow(() -> new NotFoundException("Proveedor no encontrado"));
+        System.out.println("Proveedor: " + proveedor.getNombre());
 
+
+        String originalFileName = file.getOriginalFilename();
+
+
+        System.out.println("File NAME: " + originalFileName);
+        if (originalFileName.equals("blob")) {
+
+            servicio.setNombre(servicioRequest.getNombre());
+            servicio.setTipo(servicioRequest.getTipo());
+            servicio.setCosto(servicioRequest.getCosto());
+            servicio.setEstado(servicioRequest.getEstado());
+            servicio.setDescripcion(servicioRequest.getDescripcion());
+            servicio.setProveedor(proveedor);
+
+            this.servicioRepository.save(servicio);
+
+            return;
+        }
         String fileName = getFileName(file);
-        CloudinaryResponse responseCloudinary = this.cloudinaryService.uploadFile(file, fileName);
 
+        // Eliminar imagen anterior de Cloudinary
+        String idPublica = servicio.getImagenes().get(0).getIdPublica();
+        servicio.getImagenes().clear();
+
+        this.imagenRepository.deleteByIdPublica(idPublica);
+        this.cloudinaryService.deleteFile(idPublica);
+
+        CloudinaryResponse responseCloudinary = this.cloudinaryService.uploadFile(file, fileName);
 
         Imagen imagen = Imagen.builder()
                 .url(responseCloudinary.getUrl())
@@ -119,22 +146,19 @@ public class ServicioService {
                 .etiqueta("SERVICIO")
                 .build();
 
+        System.out.println("Imagen: " + imagen);
         servicio.setNombre(servicioRequest.getNombre());
         servicio.setTipo(servicioRequest.getTipo());
         servicio.setCosto(servicioRequest.getCosto());
         servicio.setEstado(servicioRequest.getEstado());
         servicio.setDescripcion(servicioRequest.getDescripcion());
+        servicio.setProveedor(proveedor);
         servicio.getImagenes().add(imagen);
 
-        if (!Objects.equals(servicio.getImagenes().get(0).getIdPublica(), responseCloudinary.getPublicId())) {
-            this.cloudinaryService.deleteFile(servicio.getImagenes().get(0).getIdPublica());
-            this.imagenRepository.deleteByIdPublica(servicio.getImagenes().get(0).getIdPublica());
-        }
-
         imagen.setServicio(servicio);
-        proveedor.getServicios().add(servicio);
 
         this.servicioRepository.save(servicio);
+
     }
 
     public String getFileName(MultipartFile file) {
