@@ -1,13 +1,9 @@
 package com.rentevent.model.servicio;
 
-import com.rentevent.model.TipoServicio;
+import com.rentevent.model.enums.TipoServicio;
 import com.rentevent.model.evento.EventoServicio;
 import com.rentevent.model.imagen.Imagen;
 import com.rentevent.model.proveedor.Proveedor;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

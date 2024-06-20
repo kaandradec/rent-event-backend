@@ -4,7 +4,7 @@ import com.rentevent.dto.request.LoginRequest;
 import com.rentevent.dto.request.RegisterRequest;
 import com.rentevent.dto.response.AuthResponse;
 import com.rentevent.jwt.JwtService;
-import com.rentevent.model.Rol;
+import com.rentevent.model.enums.Rol;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.usuario.Usuario;
 import com.rentevent.repository.IClienteRepository;

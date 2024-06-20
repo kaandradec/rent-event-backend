@@ -1,4 +1,4 @@
-package com.rentevent.model;
+package com.rentevent.model.enums;
 
 public enum Rol {
     CLIENTE,

@@ -1,7 +1,7 @@
 package com.rentevent.model.usuario;
 
-import com.rentevent.model.Genero;
-import com.rentevent.model.Rol;
+import com.rentevent.model.enums.Genero;
+import com.rentevent.model.enums.Rol;
 import com.rentevent.model.incidencia.Incidencia;
 import com.rentevent.model.pregunta_segura.PreguntaSegura;
 import jakarta.persistence.*;

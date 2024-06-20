@@ -1,8 +1,8 @@
 package com.rentevent.controller;
 
 import com.rentevent.dto.request.ServicioRequest;
-import com.rentevent.model.EstadoServicio;
-import com.rentevent.model.TipoServicio;
+import com.rentevent.model.enums.EstadoServicio;
+import com.rentevent.model.enums.TipoServicio;
 import com.rentevent.model.servicio.ServicioResponse;
 import com.rentevent.service.ServicioService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/servicios")

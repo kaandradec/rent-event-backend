@@ -1,6 +1,6 @@
 package com.rentevent.service;
 
-import com.rentevent.model.Genero;
+import com.rentevent.model.enums.Genero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -35,6 +35,15 @@ public class Factura {
     @Column(name = "fact_numero", nullable = false)
     private String numero;
 
+    @Column(name = "fact_nombre", nullable = false)
+    private String nombre;
+
+    @Column(name = "fact_apellido", nullable = false)
+    private String apellido;
+
+    @Column(name = "fact_cedula", nullable = false)
+    private String cedula;
+
     @ManyToOne
     @JoinColumn(name = "clie_id", nullable = false)
     private Cliente cliente;

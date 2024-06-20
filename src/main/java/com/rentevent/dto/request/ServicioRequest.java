@@ -1,12 +1,11 @@
 package com.rentevent.dto.request;
 
-import com.rentevent.model.EstadoServicio;
-import com.rentevent.model.TipoServicio;
+import com.rentevent.model.enums.EstadoServicio;
+import com.rentevent.model.enums.TipoServicio;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 

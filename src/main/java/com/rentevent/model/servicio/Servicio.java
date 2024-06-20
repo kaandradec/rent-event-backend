@@ -1,8 +1,8 @@
 package com.rentevent.model.servicio;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.rentevent.model.EstadoServicio;
-import com.rentevent.model.TipoServicio;
+import com.rentevent.model.enums.EstadoServicio;
+import com.rentevent.model.enums.TipoServicio;
 import com.rentevent.model.evento.EventoServicio;
 import com.rentevent.model.imagen.Imagen;
 import com.rentevent.model.proveedor.Proveedor;

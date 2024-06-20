@@ -29,8 +29,8 @@ public class FileUploadUtil {
 
         final String fileName = file.getOriginalFilename();
         assert fileName != null;
-        final String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-        if (!isAllowedExtension(fileName, pattern)) {
+        final String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+        if (!pattern.contains(extension)) {
             throw new FuncErrorException("Extensión de archivo no , permitida (jpg, png, gif, bmp)");
         }
     }

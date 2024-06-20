@@ -1,7 +1,8 @@
 package com.rentevent.model.cliente;
 
-import com.rentevent.model.Genero;
-import com.rentevent.model.Rol;
+import com.rentevent.model.enums.Genero;
+import com.rentevent.model.enums.Pais;
+import com.rentevent.model.enums.Rol;
 import com.rentevent.model.evento.Evento;
 import com.rentevent.model.factura.Factura;
 import com.rentevent.model.pregunta_segura.PreguntaSegura;
@@ -38,6 +39,8 @@ public class Cliente implements UserDetails {
     private String contrasenia;
     @Column(name = "clie_telefono")
     private String telefono;
+    @Column(name = "clie_pais")
+    private Pais pais;
     @Column(name = "clie_prefijo")
     private String prefijo;
     @Column(name = "clie_correo")
@@ -45,6 +48,7 @@ public class Cliente implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "clie_genero")
     private Genero genero;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "clie_rol")
     private Rol rol;

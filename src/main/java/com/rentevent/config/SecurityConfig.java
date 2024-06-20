@@ -32,6 +32,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.OPTIONS).permitAll() // Permitir todos los métodos OPTIONS
                                 .requestMatchers("/servicios/**").permitAll()
                                 .requestMatchers("/clientes/**").permitAll()
+                                .requestMatchers("/account/**").permitAll()
                                 .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/auth/**").permitAll()
                                 .anyRequest().authenticated()
