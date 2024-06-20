@@ -110,9 +110,7 @@ public class ServicioService {
         Proveedor proveedor = this.proveedorRepository.findByNombre(servicioRequest.getProveedor()).orElseThrow(() -> new NotFoundException("Proveedor no encontrado"));
         System.out.println("Proveedor: " + proveedor.getNombre());
 
-
         String originalFileName = file.getOriginalFilename();
-
 
         System.out.println("File NAME: " + originalFileName);
         if (originalFileName.equals("blob")) {
