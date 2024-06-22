@@ -1,5 +1,6 @@
 package com.rentevent.auth;
 
+import com.rentevent.dto.request.ClientePassRequest;
 import com.rentevent.dto.request.LoginRequest;
 import com.rentevent.dto.request.RegisterRequest;
 import com.rentevent.dto.response.AuthResponse;
@@ -35,5 +36,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> registerClient(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.registerCliente(request));
     }
+
+
 
 }

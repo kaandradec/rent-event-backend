@@ -1,15 +1,17 @@
 package com.rentevent.auth;
 
+import com.rentevent.dto.request.ClientePassRequest;
 import com.rentevent.dto.request.LoginRequest;
 import com.rentevent.dto.request.RegisterRequest;
 import com.rentevent.dto.response.AuthResponse;
 import com.rentevent.jwt.JwtService;
-import com.rentevent.model.enums.Rol;
 import com.rentevent.model.cliente.Cliente;
+import com.rentevent.model.enums.Rol;
 import com.rentevent.model.usuario.Usuario;
 import com.rentevent.repository.IClienteRepository;
 import com.rentevent.repository.IUsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +24,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class AuthService {
 
+    @Autowired
     private final IUsuarioRepository userRepository;
     private final IClienteRepository clienteRepository;
     private final JwtService jwtService;
@@ -59,6 +62,7 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
+        System.out.println(request.toString());
         Usuario user = Usuario.builder()
                 .correo(request.getCorreo())
                 .contrasenia(passwordEncoder.encode(request.getContrasenia()))
@@ -99,4 +103,14 @@ public class AuthService {
 
     }
 
+    public boolean cambiarContraseniaCliente(ClientePassRequest request) {
+        //si la contrasenia da error termina, en lugar de retornar true
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getCorreo(), request.getContraseniaActual()));
+        Cliente cliente=clienteRepository.findByCorreo(request.getCorreo()).orElseThrow();
+        cliente.setContrasenia(passwordEncoder.encode(request.getContraseniaNueva()));
+        clienteRepository.save(cliente);
+
+
+        return true;
+    }
 }
