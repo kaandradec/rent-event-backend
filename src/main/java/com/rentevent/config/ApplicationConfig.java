@@ -4,8 +4,10 @@ import com.rentevent.model.usuario.Usuario;
 import com.rentevent.repository.IClienteRepository;
 import com.rentevent.repository.IUsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -40,6 +42,12 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    @Primary
+    public UserDetailsService usuarioDetailsService() {
+        return (username) -> clienteRepository.findByCorreo(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
     @Bean
     public UserDetailsService userDetailService() {
 
