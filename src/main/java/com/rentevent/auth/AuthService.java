@@ -4,6 +4,7 @@ import com.rentevent.dto.request.ClientePassRequest;
 import com.rentevent.dto.request.LoginRequest;
 import com.rentevent.dto.request.RegisterRequest;
 import com.rentevent.dto.response.AuthResponse;
+import com.rentevent.exception.NotFoundException;
 import com.rentevent.jwt.JwtService;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.enums.Rol;
@@ -103,14 +104,15 @@ public class AuthService {
 
     }
 
-    public boolean cambiarContraseniaCliente(ClientePassRequest request) {
+    public void cambiarContraseniaCliente(ClientePassRequest request) {
         //si la contrasenia da error termina, en lugar de retornar true
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getCorreo(), request.getContraseniaActual()));
-        Cliente cliente=clienteRepository.findByCorreo(request.getCorreo()).orElseThrow();
+        Cliente cliente = clienteRepository
+                .findByCorreo(request.getCorreo())
+                .orElseThrow(() -> new SecurityException("Cliente no encontrado"));
         cliente.setContrasenia(passwordEncoder.encode(request.getContraseniaNueva()));
+
         clienteRepository.save(cliente);
 
-
-        return true;
     }
 }
