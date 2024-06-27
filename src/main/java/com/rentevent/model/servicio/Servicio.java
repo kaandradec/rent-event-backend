@@ -38,7 +38,7 @@ public class Servicio {
     private EstadoServicio estado;
     @Column(name = "serv_costo")
     private BigDecimal costo;
-    @Column(name = "serv_descripcion")
+    @Column(name = "serv_descripcion", length = 500)
     private String descripcion;
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
     @JsonManagedReference
