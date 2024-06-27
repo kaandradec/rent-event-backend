@@ -27,11 +27,7 @@ public class ClienteController {
     public ResponseEntity<ClienteResponse> obtenerCliente(@PathVariable String user) {
         Cliente cliente = clienteService.obtenerClientePorUsername(user).orElseThrow();
 
-        ClienteResponse clienteResponse = ClienteResponse.builder()
-                .correo(cliente.getUsername())
-                .nombre(cliente.getNombre())
-                .apellido(cliente.getApellido())
-                .build();
+        ClienteResponse clienteResponse = ClienteResponse.builder().correo(cliente.getUsername()).nombre(cliente.getNombre()).apellido(cliente.getApellido()).build();
 
         return ResponseEntity.ok(clienteResponse);
     }
@@ -40,28 +36,15 @@ public class ClienteController {
     public ResponseEntity<ClienteDetallesResponse> obtenerDetallesCliente(@PathVariable String usuario) {
         Cliente cliente = clienteService.obtenerClientePorUsername(usuario).orElseThrow();
 
-        ClienteDetallesResponse clienteDetallesResponse = ClienteDetallesResponse.builder()
-                .prefijo(cliente.getPrefijo())
-                .telefono(cliente.getTelefono())
-                .genero(cliente.getGenero())
-                .pais(cliente.getPais())
-                .build();
+        ClienteDetallesResponse clienteDetallesResponse = ClienteDetallesResponse.builder().prefijo(cliente.getPrefijo()).telefono(cliente.getTelefono()).genero(cliente.getGenero()).pais(cliente.getPais()).build();
 
         return ResponseEntity.ok(clienteDetallesResponse);
     }
 
-    @PutMapping("/actualizar/telefono/")
-    public ResponseEntity<?> updateService(
-            @RequestPart("correo") String correo,
-            @RequestPart("prefijo") String prefijo,
-            @RequestPart("telefono") String telefono
-    ) {
+    @PutMapping("/actualizar/telefono")
+    public ResponseEntity<?> updateService(@RequestBody ClienteTelefonoRequest request) {
 
-        ClienteTelefonoRequest clienteTelefonoReq = ClienteTelefonoRequest.builder()
-                .correo(correo)
-                .prefijo(prefijo)
-                .telefono(telefono)
-                .build();
+        ClienteTelefonoRequest clienteTelefonoReq = ClienteTelefonoRequest.builder().correo(request.getCorreo()).prefijo(request.getPrefijo()).telefono(request.getTelefono()).build();
         clienteService.actualizarClienteTelefono(clienteTelefonoReq);
 
         return ResponseEntity.ok("Servicio actualizado satisfactoriamente");
@@ -73,7 +56,7 @@ public class ClienteController {
         try {
             boolean success;
             authService.cambiarContraseniaCliente(request);
-            success=true;
+            success = true;
             if (success) {
                 return ResponseEntity.ok().body("Contraseña cambiada con éxito");
             } else {
