@@ -1,5 +1,6 @@
 package com.rentevent.service;
 
+import com.rentevent.dto.request.ClienteRegionRequest;
 import com.rentevent.dto.request.ClienteTelefonoRequest;
 import com.rentevent.exception.NotFoundException;
 import com.rentevent.model.cliente.Cliente;
@@ -25,6 +26,15 @@ public class ClienteService {
 
         temp.setTelefono(clienteTelefonoRequest.getTelefono());
         temp.setPrefijo(clienteTelefonoRequest.getPrefijo());
+        clienteRepository.save(temp);
+    }
+    public void actualizarClienteRegion(ClienteRegionRequest clienteRegionRequest) {
+        Cliente temp = this.clienteRepository.findByCorreo(
+                clienteRegionRequest.getCorreo())
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
+
+        temp.setPais(clienteRegionRequest.getPais());
+        temp.setRegion(clienteRegionRequest.getRegion());
         clienteRepository.save(temp);
     }
 }

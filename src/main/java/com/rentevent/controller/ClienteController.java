@@ -2,6 +2,7 @@ package com.rentevent.controller;
 
 import com.rentevent.auth.AuthService;
 import com.rentevent.dto.request.ClientePassRequest;
+import com.rentevent.dto.request.ClienteRegionRequest;
 import com.rentevent.dto.request.ClienteTelefonoRequest;
 import com.rentevent.dto.response.ClienteDetallesResponse;
 import com.rentevent.dto.response.ClienteResponse;
@@ -36,7 +37,14 @@ public class ClienteController {
     public ResponseEntity<ClienteDetallesResponse> obtenerDetallesCliente(@PathVariable String usuario) {
         Cliente cliente = clienteService.obtenerClientePorUsername(usuario).orElseThrow();
 
-        ClienteDetallesResponse clienteDetallesResponse = ClienteDetallesResponse.builder().prefijo(cliente.getPrefijo()).telefono(cliente.getTelefono()).genero(cliente.getGenero()).pais(cliente.getPais()).build();
+        ClienteDetallesResponse clienteDetallesResponse =
+                ClienteDetallesResponse.builder()
+                        .prefijo(cliente.getPrefijo())
+                        .telefono(cliente.getTelefono())
+                        .genero(cliente.getGenero())
+                        .pais(cliente.getPais())
+                        .region(cliente.getRegion())
+                        .build();
 
         return ResponseEntity.ok(clienteDetallesResponse);
     }
@@ -46,6 +54,19 @@ public class ClienteController {
 
         ClienteTelefonoRequest clienteTelefonoReq = ClienteTelefonoRequest.builder().correo(request.getCorreo()).prefijo(request.getPrefijo()).telefono(request.getTelefono()).build();
         clienteService.actualizarClienteTelefono(clienteTelefonoReq);
+
+        return ResponseEntity.ok("Servicio actualizado satisfactoriamente");
+    }
+    @PutMapping("/actualizar/region")
+    public ResponseEntity<?> updateService(@RequestBody ClienteRegionRequest request) {
+
+        System.out.println(request);
+        ClienteRegionRequest clienteRegionRequest =
+                ClienteRegionRequest.builder()
+                        .correo(request.getCorreo())
+                        .region(request.getRegion())
+                        .pais(request.getPais()).build();
+        clienteService.actualizarClienteRegion(clienteRegionRequest);
 
         return ResponseEntity.ok("Servicio actualizado satisfactoriamente");
     }

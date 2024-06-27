@@ -1,6 +1,5 @@
-package com.rentevent.dto.response;
+package com.rentevent.dto.request;
 
-import com.rentevent.model.enums.Genero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClienteDetallesResponse {
-
+public class ClienteRegionRequest {
+    String correo;
     String pais;
-    String prefijo;
-    String telefono;
-    Genero genero;
     String region;
+
 }
