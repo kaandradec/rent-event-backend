@@ -1,7 +1,6 @@
 package com.rentevent.model.cliente;
 
 import com.rentevent.model.enums.Genero;
-import com.rentevent.model.enums.Pais;
 import com.rentevent.model.enums.Rol;
 import com.rentevent.model.evento.Evento;
 import com.rentevent.model.factura.Factura;
@@ -40,7 +39,15 @@ public class Cliente implements UserDetails {
     @Column(name = "clie_telefono")
     private String telefono;
     @Column(name = "clie_pais")
-    private Pais pais;
+    private String pais;
+    @Column(name = "clie_region")
+    private String region;
+    @Column(name = "clie_calle_principal")
+    private String callePrincipal;
+    @Column(name = "clie_calle_secundaria")
+    private String calleSecundaria;
+    @Column(name = "clie_referencia_direccion")
+    private String referenciaDireccion;
     @Column(name = "clie_prefijo")
     private String prefijo;
     @Column(name = "clie_correo")

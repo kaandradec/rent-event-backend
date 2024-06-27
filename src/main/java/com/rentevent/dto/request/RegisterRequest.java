@@ -18,5 +18,8 @@ public class RegisterRequest {
     Genero genero;
     String prefijo;
     String telefono;
+    String pais;
+    String ciudad;
+
 
 }

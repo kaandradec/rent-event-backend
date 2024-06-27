@@ -1,7 +1,5 @@
 package com.rentevent.model.evento;
 
-import com.rentevent.model.enums.Pais;
-import com.rentevent.model.enums.provincias.EcuadorProvincias;
 import com.rentevent.model.camion.CamionEvento;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.incidencia.Incidencia;
@@ -37,13 +35,19 @@ public class Evento {
     private LocalDate fecha;
 
     @Column(name = "even_pais", nullable = false)
-    private Pais pais;
+    private String pais;
 
-    @Column(name = "even_provincia", nullable = false)
-    private EcuadorProvincias provincia;
+    @Column(name = "even_region", nullable = false)
+    private String region;
 
-    @Column(name = "even_calle", nullable = false)
-    private String calle;
+    @Column(name = "even_calle_principal", nullable = false)
+    private String callePrincipal;
+
+    @Column(name = "even_calle_secundaria", nullable = false)
+    private String calleSecundaria;
+
+    @Column(name = "even_referencia_direccion", nullable = false)
+    private String referenciaDireccion;
 
     @Column(name = "even_hora", nullable = false)
     private LocalTime hora;

@@ -92,6 +92,8 @@ public class AuthService {
                 .apellido(request.getApellido())
                 .prefijo(request.getPrefijo())
                 .telefono(request.getTelefono())
+                .pais(request.getPais())
+                .region(request.getCiudad())
                 .genero(request.getGenero())
                 .rol(Rol.CLIENTE)
                 .build();
