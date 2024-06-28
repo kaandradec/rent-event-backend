@@ -33,5 +33,20 @@ public class PreguntaSegura {
     @ManyToOne
     @JoinColumn(name = "clie_id", nullable = true)
     private Cliente cliente;
+
+    @Transient
+    public static final String[] preguntasSeguras= new String[]{
+            "¿Cuál es el nombre de tu primer mascota?",
+            "¿En qué ciudad naciste?",
+            "¿Cuál es el nombre de tu escuela primaria?",
+            "¿Cuál es el nombre de tu mejor amigo de la infancia?",
+            "¿Cuál es el nombre de tu comida favorita?",
+            "¿Cuál es tu libro favorito?",
+            "¿Cuál es el nombre de tu primer maestro?",
+            "¿Cuál es el nombre de tu primer amor?",
+            "¿En qué ciudad conociste a tu pareja?",
+            "¿Cuál es el nombre de tu abuela materna?"
+    };
+
 }
 
