@@ -11,6 +11,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PreguntaSeguraResponse {
+public class ListaPreguntasSegurasResponse {
     List<String> preguntasSeguras;
 }

@@ -1,4 +1,4 @@
-package com.rentevent.controller;
+package com.rentevent.controller.independientes;
 
 import com.rentevent.dto.response.GeneroResponse;
 import com.rentevent.service.GeneroService;

@@ -9,12 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PreguntaSeguraRequest {
+public class CorreoRequest {
     String correo;
-    String pregunta1;
-    String respuesta1;
-    String pregunta2;
-    String respuesta2;
-    String pregunta3;
-    String respuesta3;
+
 }

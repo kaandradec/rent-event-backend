@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 .requestMatchers("/servicios/**").permitAll()
                                 .requestMatchers("/clientes/**").permitAll()
                                 .requestMatchers("/account/**").permitAll()
+                                .requestMatchers("/correo/**").permitAll()
                                 .requestMatchers("/security/**").permitAll()
                                 .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/auth/**").permitAll()

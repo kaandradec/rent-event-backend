@@ -1,6 +1,6 @@
 package com.rentevent.service;
 
-import com.rentevent.dto.request.PreguntaSeguraRequest;
+import com.rentevent.dto.request.ListaPreguntasSegurasRequest;
 import com.rentevent.exception.NotFoundException;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.pregunta_segura.PreguntaSegura;
@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,11 +16,19 @@ import java.util.List;
 public class PreguntaSeguraService {
     @Autowired
     IClienteRepository clienteRepository;
-    public List<String> pedirPreguntasSeguras() {
+
+    public List<String> listarPreguntasSeguras() {
         return List.of(PreguntaSegura.preguntasSeguras);
     }
 
-    public void actualizarPreguntasSeguras(PreguntaSeguraRequest preguntaSeguraRequest) {
+    public String pedirPreguntaSeguraRandom(String correo) {
+        int rand = (int) (Math.random() * 3);
+        return clienteRepository
+                .findByCorreo(correo).get().getPreguntaSeguras().get(rand).getPregunta();
+    }
+
+
+    public void actualizarPreguntasSeguras(ListaPreguntasSegurasRequest preguntaSeguraRequest) {
         Cliente cliente = this.clienteRepository.findByCorreo(
                         preguntaSeguraRequest.getCorreo())
                 .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));

@@ -1,10 +1,9 @@
 package com.rentevent.controller;
 
-import com.rentevent.dto.request.ClienteRegionRequest;
-import com.rentevent.dto.request.PreguntaSeguraRequest;
-import com.rentevent.dto.response.GeneroResponse;
-import com.rentevent.dto.response.PreguntaSeguraResponse;
-import com.rentevent.service.GeneroService;
+import com.rentevent.dto.request.CorreoRequest;
+import com.rentevent.dto.request.ListaPreguntasSegurasRequest;
+import com.rentevent.dto.response.ListaPreguntasSegurasResponse;
+import com.rentevent.model.pregunta_segura.PreguntaSegura;
 import com.rentevent.service.PreguntaSeguraService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/security/preguntasseguras")
@@ -22,22 +21,33 @@ public class PreguntasSegurasController {
     @Autowired
     PreguntaSeguraService preguntaSeguraService;
 
-    @GetMapping(value = "/get")
-    public ResponseEntity<PreguntaSeguraResponse> obtenerCliente() {
-        List<String> listaPreguntas = preguntaSeguraService.pedirPreguntasSeguras();
+    //todo: encriptar respuesta de preguntas y hacer la validacion
 
-        PreguntaSeguraResponse preguntaSeguraResponse = PreguntaSeguraResponse.builder()
+    @GetMapping(value = "/get")
+    public ResponseEntity<ListaPreguntasSegurasResponse> obtenerCliente() {
+        List<String> listaPreguntas = preguntaSeguraService.listarPreguntasSeguras();
+
+        ListaPreguntasSegurasResponse preguntaSeguraResponse = ListaPreguntasSegurasResponse.builder()
                 .preguntasSeguras(listaPreguntas).build();
 
         return ResponseEntity.ok(preguntaSeguraResponse);
     }
+    @PutMapping(value = "/get")
+    public ResponseEntity<ListaPreguntasSegurasResponse> obtenerPreguntaRandomCliente(@RequestBody CorreoRequest request) {
+        String preguntaSegura = preguntaSeguraService.pedirPreguntaSeguraRandom(request.getCorreo());
+
+        ListaPreguntasSegurasResponse preguntaSeguraResponse = ListaPreguntasSegurasResponse.builder()
+                .preguntasSeguras(List.of(preguntaSegura)).build();
+
+        return ResponseEntity.ok(preguntaSeguraResponse);
+    }
     @PutMapping("/actualizar")
-    public ResponseEntity<?> updateService(@RequestBody PreguntaSeguraRequest request) {
+    public ResponseEntity<?> updateService(@RequestBody ListaPreguntasSegurasRequest request) {
 
         System.out.println(request);
 
-        PreguntaSeguraRequest preguntaSeguraRequest =
-                PreguntaSeguraRequest.builder()
+        ListaPreguntasSegurasRequest preguntaSeguraRequest =
+                ListaPreguntasSegurasRequest.builder()
                         .correo(request.getCorreo())
                         .pregunta1(request.getPregunta1())
                         .respuesta1(request.getRespuesta1())
