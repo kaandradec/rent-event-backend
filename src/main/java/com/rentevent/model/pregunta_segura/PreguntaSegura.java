@@ -48,5 +48,13 @@ public class PreguntaSegura {
             "¿Cuál es el nombre de tu abuela materna?"
     };
 
+    @Override
+    public String toString() {
+        return "PreguntaSegura{" +
+                "id=" + id +
+                ", pregunta='" + pregunta + '\'' +
+                ", respuesta='" + respuesta + '\'' +
+                '}';
+    }
 }
 

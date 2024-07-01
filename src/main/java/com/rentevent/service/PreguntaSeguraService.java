@@ -1,21 +1,28 @@
 package com.rentevent.service;
 
 import com.rentevent.dto.request.ListaPreguntasSegurasRequest;
+import com.rentevent.dto.request.ValidarPreguntaSeguraRequest;
 import com.rentevent.exception.NotFoundException;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.pregunta_segura.PreguntaSegura;
 import com.rentevent.repository.IClienteRepository;
+import com.rentevent.repository.IPreguntaSeguraRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PreguntaSeguraService {
     @Autowired
-    IClienteRepository clienteRepository;
+    private final IClienteRepository clienteRepository;
+    private final IPreguntaSeguraRepository iPreguntaSegura;
+    private final PasswordEncoder passwordEncoder;
+
 
     public List<String> listarPreguntasSeguras() {
         return List.of(PreguntaSegura.preguntasSeguras);
@@ -57,5 +64,24 @@ public class PreguntaSeguraService {
         preguntaSeguras.add(preguntaSegura3);
 
         clienteRepository.save(cliente);
+    }
+
+    public void comprobarRespuestaSegura(ValidarPreguntaSeguraRequest validarPreguntaSeguraRequest) {
+        Optional<Cliente> cliente = clienteRepository.findByCorreo(validarPreguntaSeguraRequest.getCorreo());
+        if (!cliente.isPresent()) {
+            throw new NotFoundException("Usuario Incorrecto");
+        }
+        Optional<PreguntaSegura> respuestaSegura = iPreguntaSegura
+                .findPreguntaSegurasByClienteAndPregunta(cliente.get(), validarPreguntaSeguraRequest.getPregunta());
+        if (!respuestaSegura.isPresent()) {
+            throw new NotFoundException("Preguntas no existen");
+        }
+
+        if (!passwordEncoder.matches(validarPreguntaSeguraRequest.getRespuesta(), respuestaSegura.get().getRespuesta())) {
+            throw new SecurityException();
+        }
+
+
+
     }
 }
