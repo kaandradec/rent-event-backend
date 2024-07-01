@@ -1,8 +1,6 @@
 package com.rentevent.auth;
 
-import com.rentevent.dto.request.ClientePassRequest;
-import com.rentevent.dto.request.LoginRequest;
-import com.rentevent.dto.request.RegisterRequest;
+import com.rentevent.dto.request.*;
 import com.rentevent.dto.response.AuthResponse;
 import com.rentevent.exception.NotFoundException;
 import com.rentevent.jwt.JwtService;
@@ -11,8 +9,11 @@ import com.rentevent.model.enums.Rol;
 import com.rentevent.model.usuario.Usuario;
 import com.rentevent.repository.IClienteRepository;
 import com.rentevent.repository.IUsuarioRepository;
+import com.rentevent.service.ClienteService;
+import com.rentevent.service.CorreoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +29,7 @@ public class AuthService {
     @Autowired
     private final IUsuarioRepository userRepository;
     private final IClienteRepository clienteRepository;
+    private final CorreoService correoService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -85,6 +87,10 @@ public class AuthService {
     public AuthResponse registerCliente(RegisterRequest request) {
 
         System.out.println(request.toString());
+        if (correoService.verificarCorreo(CorreoRequest.builder().correo(request.getCorreo()).build())) {
+            return null;
+        }
+
         Cliente cliente = Cliente.builder()
                 .correo(request.getCorreo())
                 .contrasenia(passwordEncoder.encode(request.getContrasenia()))
@@ -106,15 +112,23 @@ public class AuthService {
 
     }
 
-    public void cambiarContraseniaCliente(ClientePassRequest request) {
+    public boolean cambiarContraseniaCliente(ClientePassRequest request) {
         //si la contrasenia da error termina, en lugar de retornar true
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getCorreo(), request.getContraseniaActual()));
         Cliente cliente = clienteRepository
                 .findByCorreo(request.getCorreo())
                 .orElseThrow(() -> new SecurityException("Cliente no encontrado"));
         cliente.setContrasenia(passwordEncoder.encode(request.getContraseniaNueva()));
+        clienteRepository.save(cliente);
+        return true;
+    }
+    public boolean cambiarContraseniaPorPreguntaCliente(ClientePassPreguntaRequest request) {
+        Cliente cliente = clienteRepository
+                .findByCorreo(request.getCorreo())
+                .orElseThrow(() -> new SecurityException("Cliente no encontrado"));
+        cliente.setContrasenia(passwordEncoder.encode(request.getContraseniaNueva()));
 
         clienteRepository.save(cliente);
-
+        return true;
     }
 }

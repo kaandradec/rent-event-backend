@@ -1,6 +1,7 @@
 package com.rentevent.controller;
 
 import com.rentevent.auth.AuthService;
+import com.rentevent.dto.request.ClientePassPreguntaRequest;
 import com.rentevent.dto.request.ClientePassRequest;
 import com.rentevent.dto.request.ClienteRegionRequest;
 import com.rentevent.dto.request.ClienteTelefonoRequest;
@@ -77,7 +78,23 @@ public class ClienteController {
         try {
             boolean success;
             authService.cambiarContraseniaCliente(request);
-            success = true;
+            success = authService.cambiarContraseniaCliente(request);
+            if (success) {
+                return ResponseEntity.ok().body("Contraseña cambiada con éxito");
+            } else {
+                return ResponseEntity.status(400).body("Error al cambiar la contraseña");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+    @PutMapping(value = "/account/pregunta-password")
+    public ResponseEntity<?> changePreguntaPassCliente(@RequestBody ClientePassPreguntaRequest request) {
+        System.out.println(request);
+        try {
+            boolean success;
+            authService.cambiarContraseniaPorPreguntaCliente(request);
+            success = authService.cambiarContraseniaPorPreguntaCliente(request);
             if (success) {
                 return ResponseEntity.ok().body("Contraseña cambiada con éxito");
             } else {

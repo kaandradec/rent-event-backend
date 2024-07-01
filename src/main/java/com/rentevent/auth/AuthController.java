@@ -33,8 +33,8 @@ public class AuthController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<AuthResponse> registerClient(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.registerCliente(request));
+    public ResponseEntity<?> registerClient(@RequestBody RegisterRequest request) {
+        return authService.registerCliente(request)!=null?ResponseEntity.ok(authService.registerCliente(request)):ResponseEntity.notFound().build();
     }
 
 }
