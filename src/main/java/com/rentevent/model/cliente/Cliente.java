@@ -1,5 +1,6 @@
 package com.rentevent.model.cliente;
 
+import com.rentevent.model.datos_facturacion.DatosFacturacion;
 import com.rentevent.model.enums.Genero;
 import com.rentevent.model.enums.Rol;
 import com.rentevent.model.evento.Evento;
@@ -60,6 +61,10 @@ public class Cliente implements UserDetails {
     @Column(name = "clie_rol")
     private Rol rol;
 
+
+    @OneToOne
+    @JoinColumn(name = "dafa_id", unique = true)
+    private DatosFacturacion datosFacturacion;
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Factura> facturas;
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)

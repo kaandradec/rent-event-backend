@@ -2,6 +2,7 @@ package com.rentevent.model.factura;
 
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.detalle_factura.DetalleFactura;
+import com.rentevent.model.evento.Evento;
 import com.rentevent.model.pago.Pago;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -33,16 +35,26 @@ public class Factura {
     private Double total;
 
     @Column(name = "fact_numero", nullable = false)
+    @SequenceGenerator(name = "seq_num_factura", sequenceName = "seq_num_factura", allocationSize = 1)
     private String numero;
 
-    @Column(name = "fact_nombre", nullable = false)
-    private String nombre;
+    @Column(name = "fact_nombre_cliente", nullable = false)
+    private String nombreCliente;
 
-    @Column(name = "fact_apellido", nullable = false)
-    private String apellido;
+    @Column(name = "fact_cedula_cliente", nullable = false)
+    private String cedulaCliente;
 
-    @Column(name = "fact_cedula", nullable = false)
-    private String cedula;
+    @Column(name = "fact_direccion_cliente", nullable = false)
+    private String direccionCliente;
+
+    @Column(name = "fact_empresa", nullable = false)
+    private String empresa;
+
+    @Column(name = "fact_direccion_empresa", nullable = false)
+    private String direccionEmpresa;
+
+    @Column(name = "fact_RUC_empresa", nullable = false)
+    private String rucEmpresa;
 
     @ManyToOne
     @JoinColumn(name = "clie_id", nullable = false)

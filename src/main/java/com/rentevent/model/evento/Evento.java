@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -39,6 +40,9 @@ public class Evento {
 
     @Column(name = "even_region", nullable = false)
     private String region;
+
+    @Column(name = "even_precio", nullable = false)
+    private BigDecimal precio;
 
     @Column(name = "even_calle_principal", nullable = false)
     private String callePrincipal;

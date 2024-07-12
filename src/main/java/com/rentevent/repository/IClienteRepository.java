@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface IClienteRepository extends JpaRepository<Cliente, Integer>{
     Optional<Cliente> findByCorreo(String username);
+
 }
+

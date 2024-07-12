@@ -1,5 +1,7 @@
 package com.rentevent.model.pago;
 
+import com.rentevent.model.enums.MetodoPago;
+import com.rentevent.model.enums.Rol;
 import com.rentevent.model.evento.Evento;
 import com.rentevent.model.tarjeta.Tarjeta;
 import com.rentevent.model.factura.Factura;
@@ -32,8 +34,9 @@ public class Pago {
     @Column(name = "pago_monto", nullable = false)
     private BigDecimal monto;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "pago_metodo", nullable = false)
-    private String metodo;
+    private MetodoPago metodoPago;
 
     @ManyToOne
     @JoinColumn(name = "even_id", nullable = false)
