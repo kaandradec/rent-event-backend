@@ -60,7 +60,7 @@ public class Evento {
     private LocalTime duracion;
 
     @OneToOne
-    @JoinColumn(name = "inci_id", nullable = false)
+    @JoinColumn(name = "inci_id")
     private Incidencia incidencia;
 
     @ManyToOne
