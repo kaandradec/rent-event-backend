@@ -122,6 +122,14 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping(value = "/account/tarjeta/{usuario}")
+    public ResponseEntity<?> obtenerTarjeta(@PathVariable String usuario) {
+        try {
+            return ResponseEntity.ok(clienteService.obtenerTarjeta(usuario));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @PutMapping("/account/datos-facturacion/actualizar")
     public ResponseEntity<?> actualizarDatosFacturacion(@RequestBody DatosFacturacionRequest request) {
         try {

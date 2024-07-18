@@ -5,6 +5,8 @@ import com.rentevent.dto.request.ClienteTelefonoRequest;
 import com.rentevent.dto.request.DatosFacturacionRequest;
 import com.rentevent.dto.request.TarjetaRequest;
 import com.rentevent.dto.response.DatosFacturacionResponse;
+import com.rentevent.dto.response.ListarTarjetaResponse;
+import com.rentevent.dto.response.TarjetaResponse;
 import com.rentevent.exception.NotFoundException;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.datos_facturacion.DatosFacturacion;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -81,10 +84,7 @@ public class ClienteService {
 
         DatosFacturacion datosFacturacion = cliente.getDatosFacturacion();
         if (datosFacturacion == null) {
-            datosFacturacion = DatosFacturacion.builder()
-                    .cedulaCliente(request.getCedula())
-                    .direccionCliente(request.getDireccion())
-                    .nombreCliente(request.getNombre()).build();
+            datosFacturacion = DatosFacturacion.builder().cedulaCliente(request.getCedula()).direccionCliente(request.getDireccion()).nombreCliente(request.getNombre()).build();
         } else {
             datosFacturacion.setCedulaCliente(request.getCedula());
             datosFacturacion.setDireccionCliente(request.getDireccion());
@@ -102,4 +102,23 @@ public class ClienteService {
     }
 
 
+    public ListarTarjetaResponse obtenerTarjeta(String usuario) {
+        Cliente cliente = clienteRepository.findByCorreo(usuario).orElseThrow();
+        List<Tarjeta> tarjetaList = cliente.getTarjetas();
+        List<TarjetaResponse> tarjetaResponseList = new ArrayList<>();
+
+        if (tarjetaList == null) {
+            tarjetaResponseList.add(TarjetaResponse.builder().token("").nombreTarjeta("").build());
+        } else {
+            tarjetaList.forEach(tarjeta ->
+                    tarjetaResponseList.add(TarjetaResponse.builder()
+                            .token(tarjeta.getToken())
+                            .nombreTarjeta(tarjeta.getNombre())
+                            .build())
+            );
+        }
+        return ListarTarjetaResponse.builder()
+                .tarjetaResponseList(tarjetaResponseList).build();
+
+    }
 }
