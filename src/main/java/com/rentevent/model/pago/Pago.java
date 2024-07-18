@@ -39,12 +39,12 @@ public class Pago {
     private MetodoPago metodoPago;
 
     @ManyToOne
-    @JoinColumn(name = "even_id", nullable = false)
+    @JoinColumn(name = "even_id")
     private Evento evento;
     @ManyToOne
-    @JoinColumn(name = "fact_id", nullable = false)
+    @JoinColumn(name = "fact_id")
     private Factura factura;
-    @OneToOne
-    @JoinColumn(name = "tarjeta_id", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "tarjeta_id")
     private Tarjeta tarjeta;
 }

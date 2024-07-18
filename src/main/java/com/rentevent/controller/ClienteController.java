@@ -1,10 +1,7 @@
 package com.rentevent.controller;
 
 import com.rentevent.auth.AuthService;
-import com.rentevent.dto.request.ClientePassPreguntaRequest;
-import com.rentevent.dto.request.ClientePassRequest;
-import com.rentevent.dto.request.ClienteRegionRequest;
-import com.rentevent.dto.request.ClienteTelefonoRequest;
+import com.rentevent.dto.request.*;
 import com.rentevent.dto.response.ClienteDetallesResponse;
 import com.rentevent.dto.response.ClienteResponse;
 import com.rentevent.model.cliente.Cliente;
@@ -104,4 +101,38 @@ public class ClienteController {
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
+
+    @PutMapping("/account/tarjeta/nueva")
+    public ResponseEntity<?> registarTarjeta(@RequestBody TarjetaRequest request) {
+        System.out.println(request);
+        try {
+
+            clienteService.registrarTarjeta(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok("Tarjeta ingresada correctamente");
+    }
+    @GetMapping(value = "/account/datos-facturacion/{usuario}")
+    public ResponseEntity<?> obtenerDatosFacturacion(@PathVariable String usuario) {
+        try {
+            return ResponseEntity.ok(clienteService.obtenerDatosFacturacion(usuario));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PutMapping("/account/datos-facturacion/actualizar")
+    public ResponseEntity<?> actualizarDatosFacturacion(@RequestBody DatosFacturacionRequest request) {
+        try {
+
+            clienteService.actualizarDatosFacturacion(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok("Tarjeta ingresada correctamente");
+    }
+
 }
