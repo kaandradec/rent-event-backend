@@ -27,15 +27,15 @@ public class Pago {
     @Column(name = "pago_id")
     private Integer id;
 
-    @Column(name = "pago_fecha", nullable = false)
+    @Column(name = "pago_fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
 
-    @Column(name = "pago_monto", nullable = false)
+    @Column(name = "pago_monto")
     private BigDecimal monto;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "pago_metodo", nullable = false)
+    @Column(name = "pago_metodo")
     private MetodoPago metodoPago;
 
     @ManyToOne

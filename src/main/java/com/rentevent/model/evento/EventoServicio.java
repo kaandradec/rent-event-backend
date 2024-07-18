@@ -31,11 +31,11 @@ public class EventoServicio {
     @Column(name = "even_serv_costo")
     private BigDecimal costo;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "even_id")
     private Evento evento;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "serv_id")
     private Servicio servicio;
 }

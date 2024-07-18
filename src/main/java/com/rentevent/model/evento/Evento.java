@@ -29,37 +29,37 @@ public class Evento {
     @Column(name = "even_id")
     private Integer id;
 
-    @Column(name = "even_nombre", nullable = false)
+    @Column(name = "even_nombre")
     private String nombre;
 
-    @Column(name = "even_fecha", nullable = false)
+    @Column(name = "even_fecha")
     private LocalDate fecha;
 
-    @Column(name = "even_pais", nullable = false)
+    @Column(name = "even_pais")
     private String pais;
 
-    @Column(name = "even_region", nullable = false)
+    @Column(name = "even_region")
     private String region;
 
-    @Column(name = "even_precio", nullable = false)
+    @Column(name = "even_precio")
     private BigDecimal precio;
 
     @Column(name = "even_iva")
     private BigDecimal iva;
 
-    @Column(name = "even_calle_principal", nullable = false)
+    @Column(name = "even_calle_principal")
     private String callePrincipal;
 
-    @Column(name = "even_calle_secundaria", nullable = false)
+    @Column(name = "even_calle_secundaria")
     private String calleSecundaria;
 
-    @Column(name = "even_referencia_direccion", nullable = false)
+    @Column(name = "even_referencia_direccion")
     private String referenciaDireccion;
 
-    @Column(name = "even_hora", nullable = false)
+    @Column(name = "even_hora")
     private LocalTime hora;
 
-    @Column(name = "even_duracion", nullable = false)
+    @Column(name = "even_duracion")
     private LocalTime duracion;
 
     @OneToOne
@@ -67,7 +67,7 @@ public class Evento {
     private Incidencia incidencia;
 
     @ManyToOne
-    @JoinColumn(name = "clie_id", nullable = false)
+    @JoinColumn(name = "clie_id")
     private Cliente cliente;
 
     @OneToMany(mappedBy = "evento")
