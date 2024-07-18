@@ -34,6 +34,9 @@ public class Factura {
     @Column(name = "fact_monto_total", nullable = false)
     private Double total;
 
+    @Column(name = "fact_iva")
+    private Double iva;
+
     @Column(name = "fact_numero", nullable = false)
     @SequenceGenerator(name = "seq_num_factura", sequenceName = "seq_num_factura", allocationSize = 1)
     private String numero;

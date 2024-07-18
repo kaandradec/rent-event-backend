@@ -44,6 +44,9 @@ public class Evento {
     @Column(name = "even_precio", nullable = false)
     private BigDecimal precio;
 
+    @Column(name = "even_iva")
+    private BigDecimal iva;
+
     @Column(name = "even_calle_principal", nullable = false)
     private String callePrincipal;
 
