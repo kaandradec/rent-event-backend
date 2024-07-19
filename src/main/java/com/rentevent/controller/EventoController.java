@@ -29,6 +29,7 @@ public class EventoController {
     @PutMapping(value = "/generar")
     public ResponseEntity<?> generarEvento(@RequestBody EventoRequest request) {
         try {
+            System.out.println(request);
             eventoService.generarEvento(request);
             return ResponseEntity.ok().build();
         } catch (Exception e) {

@@ -35,6 +35,7 @@ public class SecurityConfig {
                                 .requestMatchers("/account/**").permitAll()
                                 .requestMatchers("/correo/**").permitAll()
                                 .requestMatchers("/facturas/**").permitAll()
+                                .requestMatchers("/eventos/**").permitAll()
                                 .requestMatchers("/security/**").permitAll()
                                 .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/auth/**").permitAll()

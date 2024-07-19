@@ -13,6 +13,7 @@ import com.rentevent.model.imagen.Imagen;
 import com.rentevent.model.pago.Pago;
 import com.rentevent.model.servicio.Servicio;
 import com.rentevent.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,17 +53,18 @@ public class EventoService {
         return EventoResponse.builder().nombreEvento(eventos).fechaEvento(fechas).build();
     }
 
+    @Transactional
     public void generarEvento(EventoRequest request) {
         // Encontrar cliente por correo
         Cliente cliente = iClienteRepository.findByCorreo(request.getCorreo())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
-        // Calcular precio
+//         Calcular precio
         BigDecimal precio = Arrays.stream(request.getCart())
                 .map(CarritoRequest::getCosto)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // Calcular IVA
+//         Calcular IVA
         BigDecimal iva = precio.multiply(new BigDecimal("0.15"));
 
         // Obtener lista de servicios
@@ -71,45 +73,51 @@ public class EventoService {
                         .orElseThrow(() -> new RuntimeException("Servicio no encontrado")))
                 .toList();
 
+        // Crear lista de EventoServicio
+//        List<EventoServicio> eventoServicioList = new ArrayList<>();
+//        for (Servicio servicio : servicioList) {
+//            EventoServicio eventoServicio = EventoServicio.builder()
+//                    .costo(servicio.getCosto())
+//                    .cantidad((int) (Math.random() * 10))
+//                    .evento(null) // Se asignará más tarde
+//                    .servicio(servicio)
+//                    .build();
+//            eventoServicioList.add(eventoServicio);
+//        }
+
         // Crear y guardar evento
         Evento evento = Evento.builder()
                 .nombre(request.getNombreEvento())
-                .callePrincipal(request.getCallePrincipal())
-                .calleSecundaria(request.getCalleSecundaria())
+//                .callePrincipal(request.getCallePrincipal())
+//                .calleSecundaria(request.getCalleSecundaria())
                 .fecha(Date.valueOf(request.getFecha()).toLocalDate())
-                .pais(request.getPais())
-                .referenciaDireccion(request.getReferencia())
-                .region(request.getCiudad())
-                .precio(precio.add(iva))
-                .iva(iva)
+//                .pais(request.getPais())
+//                .referenciaDireccion(request.getReferencia())
+//                .region(request.getCiudad())
+//                .precio(precio.add(iva))
+//                .iva(iva)
                 .cliente(cliente)
                 .build();
-        evento = iEventoRepository.save(evento);
+        this.iEventoRepository.save(evento);
+        List<Evento> list =cliente.getEventos();
+        list.add(evento);
+        cliente.setEventos(list);
+        iClienteRepository.save(cliente);
 
-        // Crear lista de EventoServicio y asociarlos con el evento
-        List<EventoServicio> eventoServicioList = new ArrayList<>();
-        for (Servicio servicio : servicioList) {
-            EventoServicio eventoServicio = EventoServicio.builder()
-                    .costo(servicio.getCosto())
-                    .cantidad((int) (Math.random() * 10))
-                    .evento(evento)
-                    .servicio(servicio)
-                    .build();
-            eventoServicioList.add(eventoServicio);
-        }
-
-        // Guardar cada EventoServicio
-        for (EventoServicio eventoServicio : eventoServicioList) {
-            iEventoServicioRepository.save(eventoServicio);
-        }
+//        // Actualizar EventoServicio con el evento creado
+//        for (EventoServicio eventoServicio : eventoServicioList) {
+//            eventoServicio.setEvento(evento);
+//            iEventoServicioRepository.save(eventoServicio);
+//        }
 
         // Crear y guardar pago
-        Pago pago = Pago.builder()
-                .fecha(Date.valueOf(LocalDate.now()))
-                .monto(precio.add(iva))
-                .evento(evento)
-                .tarjeta(cliente.getTarjetas().get(0))
-                .build();
-        iPagoRepository.save(pago);
+//        Pago pago = Pago.builder()
+//                .fecha(Date.valueOf(LocalDate.now()))
+//                .monto(precio.add(iva))
+//                .evento(evento)
+//                .tarjeta(cliente.getTarjetas().get(0))
+//                .build();
+//        iPagoRepository.save(pago);
     }
+
 }
