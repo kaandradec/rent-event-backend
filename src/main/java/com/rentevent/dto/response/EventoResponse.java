@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -14,7 +16,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventoResponse {
-    private List<String> nombreEvento;
-    private List<LocalDate> fechaEvento;
+    private String callePrincipal;
+    private String calleSecundaria;
+    private String referenciaDireccion;
+    private LocalDate fecha;
+    private LocalTime hora;
+    private BigDecimal iva;
+    private String nombre;
+    private String pais;
+    private String region;
+    private BigDecimal precio;
+    private List<PagoResponse> pagos;
 }
-

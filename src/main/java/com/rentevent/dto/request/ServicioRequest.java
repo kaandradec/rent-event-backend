@@ -17,8 +17,8 @@ public class ServicioRequest {
     private String nombre;
     private BigDecimal costo;
     private String descripcion;
-    private EstadoServicio estado;
-    private TipoServicio tipo;
+    private String estado;
+    private String tipo;
     private String proveedor;
     private String idPublica;
 }

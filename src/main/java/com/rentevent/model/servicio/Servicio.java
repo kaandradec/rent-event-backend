@@ -33,9 +33,9 @@ public class Servicio {
     @Column(name = "serv_nombre")
     private String nombre;
     @Column(name = "serv_tipo")
-    private TipoServicio tipo;
+    private String tipo;
     @Column(name = "serv_estado")
-    private EstadoServicio estado;
+    private String estado;
     @Column(name = "serv_costo")
     private BigDecimal costo;
     @Column(name = "serv_descripcion", length = 500)
@@ -49,5 +49,4 @@ public class Servicio {
     @JoinColumn(name = "prov_id")
     @JsonManagedReference
     private Proveedor proveedor;
-
 }

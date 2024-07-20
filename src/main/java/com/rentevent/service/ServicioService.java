@@ -41,7 +41,7 @@ public class ServicioService {
                     .nombre(servicio.getNombre())
                     .tipo(servicio.getTipo())
                     .costo(servicio.getCosto())
-                    .estado(servicio.getEstado().toString())
+                    .estado(servicio.getEstado())
                     .descripcion(servicio.getDescripcion())
                     .imagenes(servicio.getImagenes())
                     .proveedor(servicio.getProveedor())
@@ -72,7 +72,6 @@ public class ServicioService {
     @Transactional
     public void guardarServicio(ServicioRequest servicioRequest, MultipartFile file) {
         UUID uuid = UUID.randomUUID();
-        System.out.println(uuid.toString());
 
         Proveedor proveedor = this.proveedorRepository.findByNombre(servicioRequest.getProveedor()).orElseThrow(() -> new NotFoundException("Proveedor no encontrado"));
 
