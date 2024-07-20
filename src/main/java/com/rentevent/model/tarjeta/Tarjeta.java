@@ -1,6 +1,7 @@
 package com.rentevent.model.tarjeta;
 
 import com.rentevent.model.cliente.Cliente;
+import com.rentevent.model.enums.TipoTarjeta;
 import com.rentevent.model.pago.Pago;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

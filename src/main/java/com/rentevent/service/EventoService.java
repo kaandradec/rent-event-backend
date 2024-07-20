@@ -6,6 +6,7 @@ import com.rentevent.dto.request.EventoRequest;
 import com.rentevent.dto.response.EventoResponse;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.evento.Evento;
+import com.rentevent.model.evento.EventoServicio;
 import com.rentevent.model.pago.Pago;
 import com.rentevent.model.servicio.Servicio;
 import com.rentevent.repository.*;
@@ -74,11 +75,23 @@ public class EventoService {
 //         Calcular IVA
         BigDecimal iva = precio.multiply(new BigDecimal("0.15"));
 
-        // Obtener lista de servicios
-        List<Servicio> servicioList = Arrays.stream(request.getCart())
-                .map(carritoRequest -> iServicioRepository.findByCodigo(carritoRequest.getCodigo())
-                        .orElseThrow(() -> new RuntimeException("Servicio no encontrado")))
-                .toList();
+        // Crear lista de EventoServicio
+        List<EventoServicio> eventoServicioList = new ArrayList<>();
+
+        for (CarritoRequest carritoRequest : request.getCart()) {
+            // Buscar el servicio correspondiente en el repositorio
+            Servicio servicio = iServicioRepository.findByCodigo(carritoRequest.getCodigo())
+                    .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+
+            // Crear un EventoServicio y asignar el servicio y la cantidad
+            EventoServicio eventoServicio = EventoServicio.builder()
+                    .servicio(servicio)
+                    .cantidad(carritoRequest.getQuantity())
+                    .build();
+
+            // Agregar el EventoServicio a la lista
+            eventoServicioList.add(eventoServicio);
+        }
 
 //         Crear y guardar evento
         Evento evento = Evento.builder()
@@ -92,13 +105,17 @@ public class EventoService {
                 .precio(precio.add(iva))
                 .iva(iva)
                 .hora(localTime)
+                .eventoServicios(eventoServicioList)
                 .cliente(cliente)
                 .build();
+
         this.iEventoRepository.save(evento);
+        this.iEventoServicioRepository.saveAll(eventoServicioList);
+
         List<Evento> list = cliente.getEventos();
         list.add(evento);
         cliente.setEventos(list);
-        iClienteRepository.save(cliente);
+        this.iClienteRepository.save(cliente);
 
 //         Crear y guardar pago
         Pago pago = Pago.builder()

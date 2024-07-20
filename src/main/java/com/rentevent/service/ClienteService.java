@@ -57,7 +57,14 @@ public class ClienteService {
         Cliente temp = this.clienteRepository.findByCorreo(request.getCorreo()).orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
 
         // Crea una nueva tarjeta a partir del request
-        Tarjeta nuevaTarjeta = Tarjeta.builder().fechaExpiracion(Date.valueOf(LocalDate.of(Integer.valueOf(request.getAnio()), Integer.valueOf(request.getMes()), 1))).digitos(request.getNumero()).token(request.getNumero().substring(0, 3) + "*******" + request.getNumero().substring(request.getNumero().length() - 3)).nombre(request.getNombre()).cliente(temp).build();
+        Tarjeta nuevaTarjeta = Tarjeta.builder()
+                .fechaExpiracion(Date.valueOf(LocalDate.of(Integer.valueOf(request.getAnio())
+                        , Integer.valueOf(request.getMes()), 1)))
+                .digitos(request.getNumero())
+                .token(request.getNumero().substring(0, 3) + "*******" + request.getNumero().substring(request.getNumero().length() - 3))
+                .nombre(request.getNombre())
+                .tipo(request.getTipoTarjetaSeleccionada())
+                .cliente(temp).build();
 
         // Si el cliente ya tiene una lista de tarjetas, la actualiza
         if (temp.getTarjetas() == null) {
