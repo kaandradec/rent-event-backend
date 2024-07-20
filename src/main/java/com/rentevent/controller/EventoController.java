@@ -3,6 +3,7 @@ package com.rentevent.controller;
 import com.rentevent.dto.request.CorreoRequest;
 import com.rentevent.dto.request.EventoRequest;
 import com.rentevent.dto.response.EventoResponse;
+import com.rentevent.model.servicio.ServicioResponse;
 import com.rentevent.service.EventoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,24 @@ public class EventoController {
 //        }
 //    }
 
+    @GetMapping(value = "/obtener/{codigo}")
+    public ResponseEntity<?> listarEventoPorCodigo(@PathVariable String codigo) {
+
+        try {
+            EventoResponse evento = this.eventoService.obtenerEventoPorCodigo(codigo);
+            return ResponseEntity.ok().body(evento);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     @GetMapping(value = "/listarTodos/{correo}")
     public ResponseEntity<?> listarEventosDeCliente(@PathVariable String correo) {
         System.out.println(correo);
         try {
             List<EventoResponse> lista = this.eventoService.listarEventosDeCliente(correo);
-            System.out.println(lista);
             return ResponseEntity.ok().body(lista);
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,11 +2,14 @@ package com.rentevent.service;
 
 import com.rentevent.dto.request.ServicioRequest;
 import com.rentevent.dto.response.CloudinaryResponse;
+import com.rentevent.dto.response.EventoResponse;
 import com.rentevent.exception.NotFoundException;
+import com.rentevent.model.evento.Evento;
 import com.rentevent.model.imagen.Imagen;
 import com.rentevent.model.proveedor.Proveedor;
 import com.rentevent.model.servicio.Servicio;
 import com.rentevent.model.servicio.ServicioResponse;
+import com.rentevent.repository.IEventoRepository;
 import com.rentevent.repository.IImagenRepository;
 import com.rentevent.repository.IProveedorRepository;
 import com.rentevent.repository.IServicioRepository;
@@ -17,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +31,9 @@ public class ServicioService {
     private final IImagenRepository imagenRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
+
+    @Autowired
+    private IEventoRepository iEventoRepository;
 
     public ServicioResponse obtenerServicioPorCodigo(String codigo) {
         Servicio servicio = servicioRepository.findByCodigo(codigo).orElse(null);
