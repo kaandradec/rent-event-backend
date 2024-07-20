@@ -59,12 +59,11 @@ public class EventoService {
 //    }
 
     public List<EventoResponse> listarEventosDeCliente(String correo) {
-        List<Evento> eventos = new ArrayList<>();
         List<EventoResponse> listaEventoResposes = new ArrayList<>();
-
         Cliente cliente = iClienteRepository.findByCorreo(correo).orElseThrow();
+        List<Evento> eventos = iEventoRepository.getAllByCliente(cliente);
 
-        eventos = iEventoRepository.getAllByCliente(cliente);
+
 
         eventos.forEach(evento -> {
             List<Pago> pagos = iPagoRepository.findByEvento(evento);
@@ -138,7 +137,6 @@ public class EventoService {
         // Crear y guardar evento
         Evento evento = Evento.builder()
                 .nombre(request.getNombreEvento())
-                .fecha(Date.valueOf(request.getFecha()).toLocalDate())
                 .callePrincipal(request.getCallePrincipal())
                 .calleSecundaria(request.getCalleSecundaria())
                 .fecha(LocalDate.parse(fecha, DateTimeFormatter.ISO_LOCAL_DATE))
