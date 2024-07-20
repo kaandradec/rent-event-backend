@@ -45,16 +45,14 @@ public class ServicioController {
             @RequestPart("estado") String estado,
             @RequestPart("proveedor") String proveedor
     ) {
-        EstadoServicio estadoServicio = EstadoServicio.valueOf(estado);
-        TipoServicio tipoServicio = TipoServicio.valueOf(tipo);
         BigDecimal costoBigDecimal = new BigDecimal(costo);
         ServicioRequest servicioRequest = ServicioRequest.builder()
                 .nombre(nombre)
                 .costo(costoBigDecimal)
                 .descripcion(descripcion)
-                .estado(estadoServicio)
+                .estado(estado)
                 .proveedor(proveedor)
-                .tipo(tipoServicio)
+                .tipo(tipo)
                 .build();
         servicioService.guardarServicio(servicioRequest, file);
 
@@ -74,16 +72,14 @@ public class ServicioController {
             @RequestPart("proveedor") String proveedor
     ) {
 
-        EstadoServicio estadoServicio = EstadoServicio.valueOf(estado);
-        TipoServicio tipoServicio = TipoServicio.valueOf(tipo);
         BigDecimal costoBigDecimal = new BigDecimal(costo);
         ServicioRequest servicioRequest = ServicioRequest.builder()
                 .nombre(nombre)
                 .costo(costoBigDecimal)
                 .descripcion(descripcion)
-                .estado(estadoServicio)
+                .estado(estado)
                 .proveedor(proveedor)
-                .tipo(tipoServicio)
+                .tipo(tipo)
                 .build();
         servicioService.actualizarServicio(codigo, servicioRequest, file);
 

@@ -11,6 +11,9 @@ import java.util.Optional;
 
 public interface IEventoRepository extends JpaRepository<Evento, Integer> {
     Optional<Evento> findByNombreAndCliente(String nombre, Cliente cliente);
+
     @NotNull
     List<Evento> findByClienteOrderByIdDesc(Cliente cliente);
+
+    List<Evento> getAllByCliente(Cliente cliente);
 }

@@ -4,8 +4,13 @@ import com.rentevent.dto.request.CarritoRequest;
 import com.rentevent.dto.request.CorreoRequest;
 import com.rentevent.dto.request.EventoRequest;
 import com.rentevent.dto.response.EventoResponse;
+import com.rentevent.dto.response.PagoResponse;
 import com.rentevent.model.cliente.Cliente;
+import com.rentevent.model.enums.EstadoServicio;
+import com.rentevent.model.enums.TipoServicio;
 import com.rentevent.model.evento.Evento;
+import com.rentevent.model.evento.EventoServicio;
+import com.rentevent.model.imagen.Imagen;
 import com.rentevent.model.pago.Pago;
 import com.rentevent.model.servicio.Servicio;
 import com.rentevent.repository.*;
@@ -39,17 +44,57 @@ public class EventoService {
     @Autowired
     private IEventoServicioRepository iEventoServicioRepository;
 
-    public EventoResponse listarUltimosEventos(CorreoRequest request) {
-        List<String> eventos = new ArrayList<>();
-        List<LocalDate> fechas = new ArrayList<>();
-        iEventoRepository.findByClienteOrderByIdDesc(
-                iClienteRepository.findByCorreo(request.getCorreo()).orElseThrow()
-        ).stream().forEach(evento -> {
-            eventos.add(evento.getNombre());
-            fechas.add(evento.getFecha());
+
+//    public EventoResponse listarUltimosEventos(CorreoRequest request) {
+//        List<String> eventos = new ArrayList<>();
+//        List<LocalDate> fechas = new ArrayList<>();
+//        iEventoRepository.findByClienteOrderByIdDesc(
+//                iClienteRepository.findByCorreo(request.getCorreo()).orElseThrow()
+//        ).stream().forEach(evento -> {
+//            eventos.add(evento.getNombre());
+//            fechas.add(evento.getFecha());
+//        });
+//
+//        return EventoResponse.builder().nombreEvento(eventos).fechaEvento(fechas).build();
+//    }
+
+    public List<EventoResponse> listarEventosDeCliente(String correo) {
+        List<Evento> eventos = new ArrayList<>();
+        List<EventoResponse> listaEventoResposes = new ArrayList<>();
+
+        Cliente cliente = iClienteRepository.findByCorreo(correo).orElseThrow();
+
+        eventos = iEventoRepository.getAllByCliente(cliente);
+
+        eventos.forEach(evento -> {
+            List<Pago> pagos = iPagoRepository.findByEvento(evento);
+            List<PagoResponse> pagoResponses = new ArrayList<>();
+
+            pagos.forEach(pago -> {
+                pagoResponses.add(PagoResponse.builder()
+                        .fecha(pago.getFecha())
+                        .monto(pago.getMonto())
+                        .build());
+            });
+
+            EventoResponse response = EventoResponse.builder()
+                    .nombre(evento.getNombre())
+                    .pais(evento.getPais())
+                    .region(evento.getRegion())
+                    .callePrincipal(evento.getCallePrincipal())
+                    .calleSecundaria(evento.getCalleSecundaria())
+                    .referenciaDireccion(evento.getReferenciaDireccion())
+                    .fecha(evento.getFecha())
+                    .hora(evento.getHora())
+                    .iva(evento.getIva())
+                    .precio(evento.getPrecio())
+                    .pagos(pagoResponses)
+                    .build();
+
+            listaEventoResposes.add(response);
         });
 
-        return EventoResponse.builder().nombreEvento(eventos).fechaEvento(fechas).build();
+        return listaEventoResposes;
     }
 
     @Transactional
@@ -65,24 +110,22 @@ public class EventoService {
         // Encontrar cliente por correo
         Cliente cliente = iClienteRepository.findByCorreo(request.getCorreo())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-
 //         Calcular precio
         BigDecimal precio = Arrays.stream(request.getCart())
                 .map(CarritoRequest::getCosto)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
 //         Calcular IVA
         BigDecimal iva = precio.multiply(new BigDecimal("0.15"));
-
         // Obtener lista de servicios
         List<Servicio> servicioList = Arrays.stream(request.getCart())
                 .map(carritoRequest -> iServicioRepository.findByCodigo(carritoRequest.getCodigo())
                         .orElseThrow(() -> new RuntimeException("Servicio no encontrado")))
                 .toList();
 
-//         Crear y guardar evento
+        // Crear y guardar evento
         Evento evento = Evento.builder()
                 .nombre(request.getNombreEvento())
+                .fecha(Date.valueOf(request.getFecha()).toLocalDate())
                 .callePrincipal(request.getCallePrincipal())
                 .calleSecundaria(request.getCalleSecundaria())
                 .fecha(LocalDate.parse(fecha, DateTimeFormatter.ISO_LOCAL_DATE))
@@ -95,6 +138,7 @@ public class EventoService {
                 .cliente(cliente)
                 .build();
         this.iEventoRepository.save(evento);
+
         List<Evento> list = cliente.getEventos();
         list.add(evento);
         cliente.setEventos(list);
