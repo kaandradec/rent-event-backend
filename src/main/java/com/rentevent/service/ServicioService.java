@@ -26,8 +26,11 @@ import java.util.*;
 @RequiredArgsConstructor
 // Lombok genera un constructor con los atributos marcados como final, hace que no sea necesario inyectar las dependencias con @Autowired
 public class ServicioService {
+    @Autowired
     private final IServicioRepository servicioRepository;
+    @Autowired
     private final IProveedorRepository proveedorRepository;
+    @Autowired
     private final IImagenRepository imagenRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
@@ -76,7 +79,8 @@ public class ServicioService {
     public void guardarServicio(ServicioRequest servicioRequest, MultipartFile file) {
         UUID uuid = UUID.randomUUID();
 
-        Proveedor proveedor = this.proveedorRepository.findByNombre(servicioRequest.getProveedor()).orElseThrow(() -> new NotFoundException("Proveedor no encontrado"));
+        Proveedor proveedor = this.proveedorRepository.findByNombre(servicioRequest.getProveedor())
+                .orElseThrow(() -> new NotFoundException("Proveedor no encontrado"));
 
         String fileName = getFileName(file);
         final CloudinaryResponse response = this.cloudinaryService.uploadFile(file, fileName);

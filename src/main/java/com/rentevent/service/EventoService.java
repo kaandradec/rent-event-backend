@@ -45,6 +45,11 @@ public class EventoService {
     private IServicioRepository iServicioRepository;
     @Autowired
     private IEventoServicioRepository iEventoServicioRepository;
+    @Autowired
+    private CamionService camionService;
+    @Autowired
+    private TransporteService transporteService;
+
 
 
 //    public EventoResponse listarUltimosEventos(CorreoRequest request) {
@@ -154,6 +159,8 @@ public class EventoService {
 
     @Transactional
     public void generarEvento(EventoRequest request) {
+        Integer totalServicios = 0;
+
         String fecha = (request.getFecha().substring(0,
                 request.getFecha().indexOf("T")
         ));
@@ -163,13 +170,16 @@ public class EventoService {
         LocalTime localTime = zonedDateTime.toLocalTime();
 
         // Encontrar cliente por correo
-        Cliente cliente = iClienteRepository.findByCorreo(request.getCorreo())
+        Cliente cliente = this.iClienteRepository.findByCorreo(request.getCorreo())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-//         Calcular precio
+
+        List<Evento> list = cliente.getEventos();
+
+        // Calcular precio
         BigDecimal precio = Arrays.stream(request.getCart())
                 .map(CarritoRequest::getCosto)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-//         Calcular IVA
+        // Calcular IVA
         BigDecimal iva = precio.multiply(new BigDecimal("0.15"));
 
         // Crear lista de EventoServicio
@@ -196,37 +206,46 @@ public class EventoService {
                 .build();
 
         this.iEventoRepository.save(evento);
-        this.iEventoServicioRepository.saveAll(eventoServicioList);
 
-
+        // Crear lista de EventoServicio
         for (CarritoRequest carritoRequest : request.getCart()) {
             // Buscar el servicio correspondiente en el repositorio
-            Servicio servicio = iServicioRepository.findByCodigo(carritoRequest.getCodigo())
+            Servicio servicio = this.iServicioRepository.findByCodigo(carritoRequest.getCodigo())
                     .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+            totalServicios = totalServicios + carritoRequest.getQuantity();
 
             // Crear un EventoServicio y asignar el servicio y la cantidad
             EventoServicio eventoServicio = EventoServicio.builder()
+                    .evento(evento) // Asignar el evento
                     .servicio(servicio)
-                    .evento(evento)
                     .cantidad(carritoRequest.getQuantity())
                     .build();
 
             // Agregar el EventoServicio a la lista
             eventoServicioList.add(eventoServicio);
         }
-        List<Evento> list = cliente.getEventos();
+
+        this.iEventoServicioRepository.saveAll(eventoServicioList);
+
         list.add(evento);
         cliente.setEventos(list);
         this.iClienteRepository.save(cliente);
 
-//         Crear y guardar pago
+        // Crear y guardar pago
         Pago pago = Pago.builder()
                 .fecha(Date.valueOf(LocalDate.now()))
                 .monto(precio.add(iva))
                 .evento(evento)
                 .tarjeta(cliente.getTarjetas().get(0))
                 .build();
-        iPagoRepository.save(pago);
+        this.iPagoRepository.save(pago);
+
+         try {
+             camionService.reservarCamion(totalServicios, evento);
+             transporteService.reservarTransporte(Integer.valueOf(request.getAsistentes()), evento);
+         } catch (Exception e) {
+             throw new RuntimeException(e);
+         }
     }
 
 }

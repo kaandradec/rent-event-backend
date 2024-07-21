@@ -18,7 +18,7 @@ public class EventoRequest {
     private String nombreFactura;
     private String pais;
     private String ciudad;
-    private Integer numeroCedula;
+    private String numeroCedula;
     private String nombreEvento;
     private String descripcionEvento;
     private String callePrincipal;
