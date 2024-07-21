@@ -20,9 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PagoService {
     @Autowired
-    private final IFacturaRepository ifacturaRepository;
     private final IClienteRepository iClienteRepository;
-    private final IDatosFacuturacionRepository iDatosFacuturacionRepository;
     private final IEventoRepository iEventoRepository;
     public Boolean validarEventoPagado(ValidarPagoRequest request) {
         Cliente cliente = iClienteRepository.findByCorreo(request.getCorreo())
@@ -33,7 +31,7 @@ public class PagoService {
 
         List<Pago> pagoList = evento.getPagos();
         BigDecimal totalPagado = new BigDecimal("0.00");
-        pagoList.stream().forEach(pago -> totalPagado.add(pago.getMonto()));
+        pagoList.forEach(pago -> totalPagado.add(pago.getMonto()));
 
         //devuelve True si esta pagado
         return totalPagado.compareTo(evento.getPrecio()) == 0 ;

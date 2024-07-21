@@ -11,6 +11,7 @@ import com.rentevent.repository.IClienteRepository;
 import com.rentevent.repository.IDatosFacuturacionRepository;
 import com.rentevent.repository.IEventoRepository;
 import com.rentevent.repository.IFacturaRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class FacturaService {
     private final IDatosFacuturacionRepository iDatosFacuturacionRepository;
     private final IEventoRepository iEventoRepository;
 
+    @Transactional
     public void generarFactura(DatosFacturacionRequest request) {
         Cliente cliente = this.iClienteRepository.findByCorreo(
                         request.getCorreo())

@@ -11,7 +11,7 @@ import com.rentevent.exception.NotFoundException;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.datos_facturacion.DatosFacturacion;
 import com.rentevent.model.tarjeta.Tarjeta;
-import com.rentevent.repository.DatosFacturacionRepository;
+import com.rentevent.repository.IDatosFacturacionRepository;
 import com.rentevent.repository.IClienteRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,15 +27,16 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ClienteService {
+    @Autowired
     private final IClienteRepository clienteRepository;
     @Autowired
-    private DatosFacturacionRepository datosFacturacionRepository;
+    private IDatosFacturacionRepository datosFacturacionRepository;
 
 
     public Optional<Cliente> obtenerClientePorUsername(String username) {
         return clienteRepository.findByCorreo(username);
     }
-
+    @Transactional
     public void actualizarClienteTelefono(ClienteTelefonoRequest clienteTelefonoRequest) {
         Cliente temp = this.clienteRepository.findByCorreo(clienteTelefonoRequest.getCorreo()).orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
 
@@ -43,7 +44,7 @@ public class ClienteService {
         temp.setPrefijo(clienteTelefonoRequest.getPrefijo());
         clienteRepository.save(temp);
     }
-
+    @Transactional
     public void actualizarClienteRegion(ClienteRegionRequest clienteRegionRequest) {
         Cliente temp = this.clienteRepository.findByCorreo(clienteRegionRequest.getCorreo()).orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
 
@@ -85,7 +86,7 @@ public class ClienteService {
             return DatosFacturacionResponse.builder().cedula(datosFacturacion.getCedulaCliente()).direccion(datosFacturacion.getDireccionCliente()).nombre(datosFacturacion.getNombreCliente()).build();
         }
     }
-
+    @Transactional
     public void actualizarDatosFacturacion(DatosFacturacionRequest request) throws Exception {
         Cliente cliente = clienteRepository.findByCorreo(request.getCorreo()).orElseThrow();
 

@@ -11,6 +11,7 @@ import com.rentevent.repository.IClienteRepository;
 import com.rentevent.repository.IUsuarioRepository;
 import com.rentevent.service.ClienteService;
 import com.rentevent.service.CorreoService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +64,7 @@ public class AuthService {
                 .apellido(cliente.getApellido())
                 .build();
     }
-
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
         System.out.println(request.toString());
         Usuario user = Usuario.builder()
@@ -84,6 +85,7 @@ public class AuthService {
     }
 
 
+    @Transactional
     public AuthResponse registerCliente(RegisterRequest request) {
 
         System.out.println(request.toString());
@@ -111,7 +113,7 @@ public class AuthService {
                 .build();
 
     }
-
+    @Transactional
     public boolean cambiarContraseniaCliente(ClientePassRequest request) {
         //si la contrasenia da error termina, en lugar de retornar true
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getCorreo(), request.getContraseniaActual()));
@@ -122,6 +124,7 @@ public class AuthService {
         clienteRepository.save(cliente);
         return true;
     }
+    @Transactional
     public boolean cambiarContraseniaPorPreguntaCliente(ClientePassPreguntaRequest request) {
         Cliente cliente = clienteRepository
                 .findByCorreo(request.getCorreo())

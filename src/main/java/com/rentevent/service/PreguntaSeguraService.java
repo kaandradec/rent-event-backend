@@ -7,6 +7,7 @@ import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.pregunta_segura.PreguntaSegura;
 import com.rentevent.repository.IClienteRepository;
 import com.rentevent.repository.IPreguntaSeguraRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +36,7 @@ public class PreguntaSeguraService {
     }
 
 
+    @Transactional
     public void actualizarPreguntasSeguras(ListaPreguntasSegurasRequest preguntaSeguraRequest) {
         Cliente cliente = this.clienteRepository.findByCorreo(
                         preguntaSeguraRequest.getCorreo())

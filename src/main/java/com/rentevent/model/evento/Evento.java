@@ -70,24 +70,24 @@ public class Evento {
     @JoinColumn(name = "clie_id")
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "evento")
+    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
     private List<CamionEvento> camionEventos;
 
-    @OneToMany(mappedBy = "evento")
+    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
     private List<EventoTransporte> eventoTransportes;
 
-    @OneToMany(mappedBy = "evento")
+    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
     private List<EventoUtileria> eventoUtilerias;
 
-    @OneToMany(mappedBy = "evento")
+    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL )
     private List<EventoServicio> eventoServicios;
 
-    @OneToMany(mappedBy = "evento")
+    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
     private List<EventoPatrocinador> eventoPatrocinadores;
 
-    @OneToMany(mappedBy = "evento")
+    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
     private List<Resenia> resenias;
 
-    @OneToMany(mappedBy = "evento")
+    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
     private List<Pago> pagos;
 }

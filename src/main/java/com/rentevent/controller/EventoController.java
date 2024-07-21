@@ -47,7 +47,7 @@ public class EventoController {
         try {
             System.out.println(request);
             eventoService.generarEvento(request);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("Registrado Correctamente");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();

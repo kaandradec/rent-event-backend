@@ -43,7 +43,7 @@ public class Servicio {
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Imagen> imagenes;
-    @OneToMany(mappedBy = "servicio")
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
     private List<EventoServicio> eventos;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prov_id")
