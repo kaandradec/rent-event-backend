@@ -50,20 +50,42 @@ public class ServicioService {
                     .estado(servicio.getEstado())
                     .descripcion(servicio.getDescripcion())
                     .imagenes(servicio.getImagenes())
-                    .proveedor(servicio.getProveedor())
+                    .proveedor(servicio.getProveedor().getNombre())
                     .build();
             return servicioResponse;
         }
         return null;
     }
 
-    public List<Servicio> obtenerServicios() {
-        return this.servicioRepository.findAll();
+    public List<ServicioResponse> obtenerServicios() {
+        List<Servicio> servicios = this.servicioRepository.findAll();
+
+        List<ServicioResponse> listaServicioResponse = new ArrayList<>();
+
+        servicios.forEach(servicio -> {
+            listaServicioResponse.add(
+                    ServicioResponse.builder()
+                            .id(servicio.getId())
+                            .codigo(servicio.getCodigo())
+                            .nombre(servicio.getNombre())
+                            .tipo(servicio.getTipo())
+                            .costo(servicio.getCosto())
+                            .descripcion(servicio.getDescripcion())
+                            .imagenes(servicio.getImagenes())
+                            .proveedor(servicio.getProveedor().getNombre())
+                            .estado(servicio.getEstado())
+
+                            .build()
+            );
+        });
+
+        return listaServicioResponse;
     }
 
     public ServicioResponse obtenerServicioPorId(Integer id) {
         Servicio servicio = this.servicioRepository.findById(id).orElseThrow(() -> new NotFoundException("Servicio no encontrado"));
         return ServicioResponse.builder()
+                .id(servicio.getId())
                 .codigo(servicio.getCodigo())
                 .nombre(servicio.getNombre())
                 .tipo(servicio.getTipo())
@@ -71,9 +93,10 @@ public class ServicioService {
                 .descripcion(servicio.getDescripcion())
                 .imagenes(servicio.getImagenes())
                 .eventos(servicio.getEventos())
-                .proveedor(servicio.getProveedor())
+                .proveedor(servicio.getProveedor().getNombre())
                 .build();
     }
+
 
     @Transactional
     public void guardarServicio(ServicioRequest servicioRequest, MultipartFile file) {

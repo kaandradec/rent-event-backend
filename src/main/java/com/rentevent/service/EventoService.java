@@ -8,6 +8,7 @@ import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.evento.Evento;
 import com.rentevent.model.evento.EventoPatrocinador;
 import com.rentevent.model.evento.EventoServicio;
+import com.rentevent.model.incidencia.Incidencia;
 import com.rentevent.model.pago.Pago;
 import com.rentevent.model.patrocinador.Patrocinador;
 import com.rentevent.model.servicio.Servicio;
@@ -67,24 +68,27 @@ public class EventoService {
 //    }
 
     public EventoResponse obtenerEventoPorCodigo(String codigo) {
+        System.out.println("CODIGO" + codigo);
         Evento evento = this.iEventoRepository.findByCodigo(codigo).orElseThrow();
 
         List<Pago> pagos = evento.getPagos();
         List<PagoResponse> listaPagosResponse = new ArrayList<>();
 
-        List<EventoServicio> eventosServiciosTablaRompimiento = this.iEventoServicioRepository.getAllByEvento(evento);
+        List<EventoServicio> eventosServiciosTablaRompimiento = this.iEventoServicioRepository.findAllByEventoEquals(evento);
+//        System.out.println("SERVICIOS" + eventosServiciosTablaRompimiento);
+
         List<Servicio> servicios = new ArrayList<>();
         List<ServicioResponse> listaServiciosResponse = new ArrayList<>();
 
         eventosServiciosTablaRompimiento.forEach(eventServ -> {
-            Integer idServicio = eventServ.getId();
-            Servicio serv = this.iServicioRepository.findById(idServicio).orElseThrow();
+            Servicio serv = eventServ.getServicio();
             servicios.add(serv);
         });
 
         servicios.forEach(serv -> {
             listaServiciosResponse.add(
                     ServicioResponse.builder()
+                            .nombre(serv.getNombre())
                             .costo(serv.getCosto())
                             .tipo(serv.getTipo())
                             .descripcion(serv.getDescripcion())
@@ -105,6 +109,7 @@ public class EventoService {
 
         return EventoResponse.builder()
                 .codigo(evento.getCodigo())
+                .estado(evento.getEstado())
                 .nombre(evento.getNombre())
                 .pais(evento.getPais())
                 .region(evento.getRegion())
@@ -139,6 +144,7 @@ public class EventoService {
 
             EventoResponse response = EventoResponse.builder()
                     .codigo(evento.getCodigo())
+                    .estado(evento.getEstado())
                     .nombre(evento.getNombre())
                     .pais(evento.getPais())
                     .region(evento.getRegion())
@@ -193,6 +199,7 @@ public class EventoService {
         // Crear y guardar evento
         Evento evento = Evento.builder()
                 .codigo("EVENT-" + uuid.toString().substring(0, 8))
+                .estado("ACTIVO")
                 .nombre(request.getNombreEvento())
                 .callePrincipal(request.getCallePrincipal())
                 .calleSecundaria(request.getCalleSecundaria())
@@ -259,6 +266,23 @@ public class EventoService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void cancelarEvento(String codigo) {
+        Evento evento = this.iEventoRepository.findByCodigo(codigo).orElseThrow();
+        evento.setEstado("CANCELADO");
+        this.iEventoRepository.save(evento);
+    }
+
+    public void guardarIncidencia(String codigoEvento, String descripcion) {
+        Evento evento = this.iEventoRepository.findByCodigo(codigoEvento).orElseThrow();
+        Incidencia incidencia = Incidencia.builder()
+                .descripcion(descripcion)
+                .build();
+        evento.setIncidencia(incidencia);
+
+        this.iEventoRepository.save(evento);
+
     }
 
 }

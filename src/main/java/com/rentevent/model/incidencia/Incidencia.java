@@ -24,15 +24,15 @@ public class Incidencia {
     @Column(name = "inci_id")
     private Integer id;
 
-    @Column(name = "inci_descripcion", nullable = false)
+    @Column(name = "inci_descripcion")
     private String descripcion;
 
-    @Column(name = "inci_estado", nullable = false)
+    @Column(name = "inci_estado")
     private String estado;
 
     @OneToOne(mappedBy = "incidencia")
     private Evento evento;
     @ManyToOne
-    @JoinColumn(name = "usua_id", nullable = false)
+    @JoinColumn(name = "usua_id")
     private Usuario usuario;
 }

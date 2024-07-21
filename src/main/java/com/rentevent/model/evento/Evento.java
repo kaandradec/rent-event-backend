@@ -34,6 +34,8 @@ public class Evento {
 
     @Column(name = "even_nombre")
     private String nombre;
+    @Column(name = "even_estado")
+    private String estado; // ACTIVO CANCELADO COMPLETADO
 
     @Column(name = "even_fecha")
     private LocalDate fecha;
@@ -65,7 +67,7 @@ public class Evento {
     @Column(name = "even_duracion")
     private LocalTime duracion;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "inci_id")
     private Incidencia incidencia;
 

@@ -2,6 +2,7 @@ package com.rentevent.controller;
 
 import com.rentevent.dto.request.CorreoRequest;
 import com.rentevent.dto.request.EventoRequest;
+import com.rentevent.dto.request.IncidenciaRequest;
 import com.rentevent.dto.response.EventoResponse;
 import com.rentevent.model.servicio.ServicioResponse;
 import com.rentevent.service.EventoService;
@@ -61,6 +62,29 @@ public class EventoController {
             System.out.println(request);
             eventoService.generarEvento(request);
             return ResponseEntity.ok("Registrado Correctamente");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping(value = "cancelar/{codigo}")
+    public ResponseEntity<?> cancelarEvento(@PathVariable String codigo) {
+        try {
+            this.eventoService.cancelarEvento(codigo); // cambiar estado a CANCELADO
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping(value = "/guardarIncidencia")
+    public ResponseEntity<?> guardarIncidencia(@RequestBody IncidenciaRequest request) {
+        System.out.println(request);
+        try {
+            this.eventoService.guardarIncidencia(request.getCodigoServicio(), request.getDescripcion());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();

@@ -34,7 +34,8 @@ public class ServicioController {
 
     @GetMapping()
     public ResponseEntity<?> getServicios() {
-        return ResponseEntity.ok(servicioService.obtenerServicios());
+        List<ServicioResponse> lista = this.servicioService.obtenerServicios();
+        return ResponseEntity.ok(lista);
     }
 
 
