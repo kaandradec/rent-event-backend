@@ -42,12 +42,12 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    @Primary
-    public UserDetailsService usuarioDetailsService() {
-        return (username) -> clienteRepository.findByCorreo(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+    //    @Bean
+//    @Primary
+//    public UserDetailsService usuarioDetailsService() {
+//        return (username) -> clienteRepository.findByCorreo(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//    }
     @Bean
     public UserDetailsService userDetailService() {
 

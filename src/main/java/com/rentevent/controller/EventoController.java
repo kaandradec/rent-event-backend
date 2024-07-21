@@ -9,6 +9,7 @@ import com.rentevent.service.EventoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +32,6 @@ public class EventoController {
 //        }
 //    }
 
-
     @GetMapping(value = "/obtener/{codigo}")
     public ResponseEntity<?> listarEventoPorCodigo(@PathVariable String codigo) {
 
@@ -43,8 +43,6 @@ public class EventoController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
     @GetMapping(value = "/listarTodos/{correo}")
     public ResponseEntity<?> listarEventosDeCliente(@PathVariable String correo) {
         System.out.println(correo);
@@ -56,7 +54,6 @@ public class EventoController {
             return ResponseEntity.notFound().build();
         }
     }
-
     @PutMapping(value = "/generar")
     public ResponseEntity<?> generarEvento(@RequestBody EventoRequest request) {
         try {
@@ -78,7 +75,6 @@ public class EventoController {
             return ResponseEntity.notFound().build();
         }
     }
-
     @PutMapping(value = "/guardarIncidencia")
     public ResponseEntity<?> guardarIncidencia(@RequestBody IncidenciaRequest request) {
         System.out.println(request);

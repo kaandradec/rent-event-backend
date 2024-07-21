@@ -64,6 +64,7 @@ public class AuthService {
                 .apellido(cliente.getApellido())
                 .build();
     }
+
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         System.out.println(request.toString());
@@ -113,6 +114,7 @@ public class AuthService {
                 .build();
 
     }
+
     @Transactional
     public boolean cambiarContraseniaCliente(ClientePassRequest request) {
         //si la contrasenia da error termina, en lugar de retornar true
@@ -124,6 +126,7 @@ public class AuthService {
         clienteRepository.save(cliente);
         return true;
     }
+
     @Transactional
     public boolean cambiarContraseniaPorPreguntaCliente(ClientePassPreguntaRequest request) {
         Cliente cliente = clienteRepository

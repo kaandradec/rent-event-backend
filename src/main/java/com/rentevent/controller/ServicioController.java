@@ -8,6 +8,7 @@ import com.rentevent.model.servicio.ServicioResponse;
 import com.rentevent.service.ServicioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,6 +39,7 @@ public class ServicioController {
         return ResponseEntity.ok(lista);
     }
 
+    @PreAuthorize("hasAuthority('USUARIO')")
     @PostMapping("/guardar")
     public ResponseEntity<?> createService(
             @RequestPart("file") MultipartFile file,
@@ -63,6 +65,7 @@ public class ServicioController {
         return ResponseEntity.ok("Servicio creado satisfactoriamente");
     }
 
+    @PreAuthorize("hasAuthority('USUARIO')")
     @PutMapping("/actualizar/{codigo}")
     public ResponseEntity<?> updateService(
             @PathVariable String codigo,
@@ -89,7 +92,7 @@ public class ServicioController {
         return ResponseEntity.ok("Servicio actualizado satisfactoriamente");
     }
 
-
+    // Probando subir imagenes
     @PostMapping("/imagen/{id}")
     public ResponseEntity<?> subirImagen(@PathVariable Integer id, @RequestPart final MultipartFile file) {
         System.out.println("HOLA");
