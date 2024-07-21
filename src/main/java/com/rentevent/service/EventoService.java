@@ -1,17 +1,15 @@
 package com.rentevent.service;
 
 import com.rentevent.dto.request.CarritoRequest;
-import com.rentevent.dto.request.CorreoRequest;
 import com.rentevent.dto.request.EventoRequest;
 import com.rentevent.dto.response.EventoResponse;
 import com.rentevent.dto.response.PagoResponse;
 import com.rentevent.model.cliente.Cliente;
-import com.rentevent.model.enums.EstadoServicio;
-import com.rentevent.model.enums.TipoServicio;
 import com.rentevent.model.evento.Evento;
+import com.rentevent.model.evento.EventoPatrocinador;
 import com.rentevent.model.evento.EventoServicio;
-import com.rentevent.model.imagen.Imagen;
 import com.rentevent.model.pago.Pago;
+import com.rentevent.model.patrocinador.Patrocinador;
 import com.rentevent.model.servicio.Servicio;
 import com.rentevent.model.servicio.ServicioResponse;
 import com.rentevent.repository.*;
@@ -49,7 +47,10 @@ public class EventoService {
     private CamionService camionService;
     @Autowired
     private TransporteService transporteService;
-
+    @Autowired
+    private IPatrocinadorRepository iPatrocinadorRepository;
+    @Autowired
+    private IEventoPatrocinadorRepository iEventoPatrocinadorRepository;
 
 
 //    public EventoResponse listarUltimosEventos(CorreoRequest request) {
@@ -225,6 +226,18 @@ public class EventoService {
             eventoServicioList.add(eventoServicio);
         }
 
+        //todo : valido para 1 patrocinador xd
+        if (Integer.valueOf(request.getAsistentes()) > 100) {
+            Patrocinador patrocinador;
+            patrocinador = iPatrocinadorRepository.findAll().get(0);
+            iEventoPatrocinadorRepository.save(
+                    EventoPatrocinador.builder()
+                            .evento(evento)
+                            .patrocinador(patrocinador)
+                            .build());
+        }
+
+
         this.iEventoServicioRepository.saveAll(eventoServicioList);
 
         list.add(evento);
@@ -240,12 +253,12 @@ public class EventoService {
                 .build();
         this.iPagoRepository.save(pago);
 
-         try {
-             camionService.reservarCamion(totalServicios, evento);
-             transporteService.reservarTransporte(Integer.valueOf(request.getAsistentes()), evento);
-         } catch (Exception e) {
-             throw new RuntimeException(e);
-         }
+        try {
+            camionService.reservarCamion(totalServicios, evento);
+            transporteService.reservarTransporte(Integer.valueOf(request.getAsistentes()), evento);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

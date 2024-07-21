@@ -1,9 +1,11 @@
 package com.rentevent;
 
 import com.rentevent.model.camion.Camion;
+import com.rentevent.model.patrocinador.Patrocinador;
 import com.rentevent.model.proveedor.Proveedor;
 import com.rentevent.model.transporte.Transporte;
 import com.rentevent.repository.ICamionRepository;
+import com.rentevent.repository.IPatrocinadorRepository;
 import com.rentevent.repository.IProveedorRepository;
 import com.rentevent.repository.ITransporteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class RentEventApplication implements CommandLineRunner {
     ICamionRepository iCamionRepository;
     @Autowired
     ITransporteRepository iTransporteRepository;
+    @Autowired
+    IPatrocinadorRepository iPatrocinadorRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(RentEventApplication.class, args);
@@ -30,9 +34,19 @@ public class RentEventApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         List<Proveedor> proveedorList = iProveedorRepository.findAll();
+        List<Patrocinador> patrocinadorList = iPatrocinadorRepository.findAll();
         List<Camion> camionList = iCamionRepository.findAll();
         List<Transporte> transporteList = iTransporteRepository.findAll();
 
+
+        if (patrocinadorList.size() == 0) {
+            iPatrocinadorRepository.save(
+                    Patrocinador.builder()
+                            .nombre("Rent-Event")
+                            .descripcion("Despliegue publicitario de la marca")
+                            .tipo("Servicios")
+                            .build());
+        }
         if (proveedorList.size() == 0) {
             iProveedorRepository.saveAll(List.of(Proveedor.builder()
                             .nombre("Renta Todo")
