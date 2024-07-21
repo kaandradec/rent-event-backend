@@ -18,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class EventoResponse {
     private String codigo;
+    private String estado; // ACTIVO CANCELADO COMPLETADO
     private String callePrincipal;
     private String calleSecundaria;
     private String referenciaDireccion;

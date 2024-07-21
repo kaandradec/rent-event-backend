@@ -34,6 +34,8 @@ public class Evento {
 
     @Column(name = "even_nombre")
     private String nombre;
+    @Column(name = "even_estado")
+    private String estado; // ACTIVO CANCELADO COMPLETADO
 
     @Column(name = "even_fecha")
     private LocalDate fecha;
@@ -65,7 +67,7 @@ public class Evento {
     @Column(name = "even_duracion")
     private LocalTime duracion;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "inci_id")
     private Incidencia incidencia;
 
@@ -73,24 +75,24 @@ public class Evento {
     @JoinColumn(name = "clie_id")
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<CamionEvento> camionEventos;
 
-    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<EventoTransporte> eventoTransportes;
 
-    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<EventoUtileria> eventoUtilerias;
 
-    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL )
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<EventoServicio> eventoServicios;
 
-    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<EventoPatrocinador> eventoPatrocinadores;
 
-    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<Resenia> resenias;
 
-    @OneToMany(mappedBy = "evento", cascade =CascadeType.ALL)
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<Pago> pagos;
 }

@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServicioResponse {
+    private Integer id;
     private String codigo;
     private String nombre;
     private String estado;
@@ -25,5 +26,5 @@ public class ServicioResponse {
     private String descripcion;
     private List<Imagen> imagenes;
     private List<EventoServicio> eventos;
-    private Proveedor proveedor;
+    private String proveedor;
 }
