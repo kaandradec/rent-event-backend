@@ -1,9 +1,6 @@
 package com.rentevent.service;
 
-import com.rentevent.dto.request.ClienteRegionRequest;
-import com.rentevent.dto.request.ClienteTelefonoRequest;
-import com.rentevent.dto.request.DatosFacturacionRequest;
-import com.rentevent.dto.request.TarjetaRequest;
+import com.rentevent.dto.request.*;
 import com.rentevent.dto.response.DatosFacturacionResponse;
 import com.rentevent.dto.response.ListarTarjetaResponse;
 import com.rentevent.dto.response.TarjetaResponse;
@@ -11,8 +8,9 @@ import com.rentevent.exception.NotFoundException;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.datos_facturacion.DatosFacturacion;
 import com.rentevent.model.tarjeta.Tarjeta;
-import com.rentevent.repository.IDatosFacturacionRepository;
 import com.rentevent.repository.IClienteRepository;
+import com.rentevent.repository.IDatosFacturacionRepository;
+import com.rentevent.repository.ITarjetaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +29,14 @@ public class ClienteService {
     private final IClienteRepository clienteRepository;
     @Autowired
     private IDatosFacturacionRepository datosFacturacionRepository;
+    @Autowired
+    private ITarjetaRepository iTarjetaRepository;
 
 
     public Optional<Cliente> obtenerClientePorUsername(String username) {
         return clienteRepository.findByCorreo(username);
     }
+
     @Transactional
     public void actualizarClienteTelefono(ClienteTelefonoRequest clienteTelefonoRequest) {
         Cliente temp = this.clienteRepository.findByCorreo(clienteTelefonoRequest.getCorreo()).orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
@@ -44,6 +45,7 @@ public class ClienteService {
         temp.setPrefijo(clienteTelefonoRequest.getPrefijo());
         clienteRepository.save(temp);
     }
+
     @Transactional
     public void actualizarClienteRegion(ClienteRegionRequest clienteRegionRequest) {
         Cliente temp = this.clienteRepository.findByCorreo(clienteRegionRequest.getCorreo()).orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
@@ -86,6 +88,7 @@ public class ClienteService {
             return DatosFacturacionResponse.builder().cedula(datosFacturacion.getCedulaCliente()).direccion(datosFacturacion.getDireccionCliente()).nombre(datosFacturacion.getNombreCliente()).build();
         }
     }
+
     @Transactional
     public void actualizarDatosFacturacion(DatosFacturacionRequest request) throws Exception {
         Cliente cliente = clienteRepository.findByCorreo(request.getCorreo()).orElseThrow();
