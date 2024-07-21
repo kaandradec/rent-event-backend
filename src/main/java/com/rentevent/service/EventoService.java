@@ -13,6 +13,7 @@ import com.rentevent.model.evento.EventoServicio;
 import com.rentevent.model.imagen.Imagen;
 import com.rentevent.model.pago.Pago;
 import com.rentevent.model.servicio.Servicio;
+import com.rentevent.model.servicio.ServicioResponse;
 import com.rentevent.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,59 @@ public class EventoService {
 //
 //        return EventoResponse.builder().nombreEvento(eventos).fechaEvento(fechas).build();
 //    }
+public EventoResponse obtenerEventoPorCodigo(String codigo) {
+    Evento evento = this.iEventoRepository.findByCodigo(codigo).orElseThrow();
+
+    List<Pago> pagos = evento.getPagos();
+    List<PagoResponse> listaPagosResponse = new ArrayList<>();
+
+    List<EventoServicio> eventosServiciosTablaRompimiento = this.iEventoServicioRepository.getAllByEvento(evento);
+    List<Servicio> servicios = new ArrayList<>();
+    List<ServicioResponse> listaServiciosResponse = new ArrayList<>();
+
+    eventosServiciosTablaRompimiento.forEach(eventServ -> {
+        Integer idServicio = eventServ.getId();
+        Servicio serv = this.iServicioRepository.findById(idServicio).orElseThrow();
+        servicios.add(serv);
+    });
+
+    servicios.forEach(serv -> {
+        listaServiciosResponse.add(
+                ServicioResponse.builder()
+                        .costo(serv.getCosto())
+                        .tipo(serv.getTipo())
+                        .descripcion(serv.getDescripcion())
+                        .imagenes(serv.getImagenes())
+                        .build()
+        );
+    });
+
+    pagos.forEach(pago -> {
+        listaPagosResponse.add(
+                PagoResponse.builder()
+                        .monto(pago.getMonto())
+                        .fecha(pago.getFecha())
+                        .build()
+        );
+
+    });
+
+    return EventoResponse.builder()
+            .codigo(evento.getCodigo())
+            .nombre(evento.getNombre())
+            .pais(evento.getPais())
+            .region(evento.getRegion())
+            .callePrincipal(evento.getCallePrincipal())
+            .calleSecundaria(evento.getCalleSecundaria())
+            .referenciaDireccion(evento.getReferenciaDireccion())
+            .fecha(evento.getFecha())
+            .hora(evento.getHora())
+            .iva(evento.getIva())
+            .precio(evento.getPrecio())
+            .pagos(listaPagosResponse)
+            .servicios(listaServiciosResponse)
+            .build();
+}
 
     public List<EventoResponse> listarEventosDeCliente(String correo) {
         List<EventoResponse> listaEventoResposes = new ArrayList<>();
