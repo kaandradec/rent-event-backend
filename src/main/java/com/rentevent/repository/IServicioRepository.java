@@ -1,5 +1,7 @@
 package com.rentevent.repository;
 
+import com.rentevent.model.evento.Evento;
+import com.rentevent.model.evento.EventoServicio;
 import com.rentevent.model.servicio.Servicio;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +16,7 @@ import java.util.Optional;
 public interface IServicioRepository extends JpaRepository<Servicio, Integer> {
 
     Optional<Servicio> findByCodigo(String codigo);
+
     @NotNull
     List<Servicio> findAll();
 
@@ -23,4 +26,5 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer> {
             @Param(value = "nombre") String nombre, @Param(value = "tipo") String tipo,
             @Param(value = "costo") BigDecimal costo, @Param(value = "descripcion") String descripcion,
             @Param(value = "codigo") String codigo);
+
 }

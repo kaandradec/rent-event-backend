@@ -1,6 +1,7 @@
 package com.rentevent.dto.response;
 
 
+import com.rentevent.model.servicio.ServicioResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventoResponse {
+    private String codigo;
     private String callePrincipal;
     private String calleSecundaria;
     private String referenciaDireccion;
@@ -27,4 +29,5 @@ public class EventoResponse {
     private String region;
     private BigDecimal precio;
     private List<PagoResponse> pagos;
+    private List<ServicioResponse> servicios;
 }

@@ -29,6 +29,9 @@ public class Evento {
     @Column(name = "even_id")
     private Integer id;
 
+    @Column(name = "serv_codigo")
+    private String codigo;
+
     @Column(name = "even_nombre")
     private String nombre;
 
