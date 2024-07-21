@@ -29,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -58,65 +59,65 @@ public class EventoService {
 //
 //        return EventoResponse.builder().nombreEvento(eventos).fechaEvento(fechas).build();
 //    }
-public EventoResponse obtenerEventoPorCodigo(String codigo) {
-    Evento evento = this.iEventoRepository.findByCodigo(codigo).orElseThrow();
 
-    List<Pago> pagos = evento.getPagos();
-    List<PagoResponse> listaPagosResponse = new ArrayList<>();
+    public EventoResponse obtenerEventoPorCodigo(String codigo) {
+        Evento evento = this.iEventoRepository.findByCodigo(codigo).orElseThrow();
 
-    List<EventoServicio> eventosServiciosTablaRompimiento = this.iEventoServicioRepository.getAllByEvento(evento);
-    List<Servicio> servicios = new ArrayList<>();
-    List<ServicioResponse> listaServiciosResponse = new ArrayList<>();
+        List<Pago> pagos = evento.getPagos();
+        List<PagoResponse> listaPagosResponse = new ArrayList<>();
 
-    eventosServiciosTablaRompimiento.forEach(eventServ -> {
-        Integer idServicio = eventServ.getId();
-        Servicio serv = this.iServicioRepository.findById(idServicio).orElseThrow();
-        servicios.add(serv);
-    });
+        List<EventoServicio> eventosServiciosTablaRompimiento = this.iEventoServicioRepository.getAllByEvento(evento);
+        List<Servicio> servicios = new ArrayList<>();
+        List<ServicioResponse> listaServiciosResponse = new ArrayList<>();
 
-    servicios.forEach(serv -> {
-        listaServiciosResponse.add(
-                ServicioResponse.builder()
-                        .costo(serv.getCosto())
-                        .tipo(serv.getTipo())
-                        .descripcion(serv.getDescripcion())
-                        .imagenes(serv.getImagenes())
-                        .build()
-        );
-    });
+        eventosServiciosTablaRompimiento.forEach(eventServ -> {
+            Integer idServicio = eventServ.getId();
+            Servicio serv = this.iServicioRepository.findById(idServicio).orElseThrow();
+            servicios.add(serv);
+        });
 
-    pagos.forEach(pago -> {
-        listaPagosResponse.add(
-                PagoResponse.builder()
-                        .monto(pago.getMonto())
-                        .fecha(pago.getFecha())
-                        .build()
-        );
+        servicios.forEach(serv -> {
+            listaServiciosResponse.add(
+                    ServicioResponse.builder()
+                            .costo(serv.getCosto())
+                            .tipo(serv.getTipo())
+                            .descripcion(serv.getDescripcion())
+                            .imagenes(serv.getImagenes())
+                            .build()
+            );
+        });
 
-    });
+        pagos.forEach(pago -> {
+            listaPagosResponse.add(
+                    PagoResponse.builder()
+                            .monto(pago.getMonto())
+                            .fecha(pago.getFecha())
+                            .build()
+            );
 
-    return EventoResponse.builder()
-            .codigo(evento.getCodigo())
-            .nombre(evento.getNombre())
-            .pais(evento.getPais())
-            .region(evento.getRegion())
-            .callePrincipal(evento.getCallePrincipal())
-            .calleSecundaria(evento.getCalleSecundaria())
-            .referenciaDireccion(evento.getReferenciaDireccion())
-            .fecha(evento.getFecha())
-            .hora(evento.getHora())
-            .iva(evento.getIva())
-            .precio(evento.getPrecio())
-            .pagos(listaPagosResponse)
-            .servicios(listaServiciosResponse)
-            .build();
-}
+        });
+
+        return EventoResponse.builder()
+                .codigo(evento.getCodigo())
+                .nombre(evento.getNombre())
+                .pais(evento.getPais())
+                .region(evento.getRegion())
+                .callePrincipal(evento.getCallePrincipal())
+                .calleSecundaria(evento.getCalleSecundaria())
+                .referenciaDireccion(evento.getReferenciaDireccion())
+                .fecha(evento.getFecha())
+                .hora(evento.getHora())
+                .iva(evento.getIva())
+                .precio(evento.getPrecio())
+                .pagos(listaPagosResponse)
+                .servicios(listaServiciosResponse)
+                .build();
+    }
 
     public List<EventoResponse> listarEventosDeCliente(String correo) {
         List<EventoResponse> listaEventoResposes = new ArrayList<>();
         Cliente cliente = iClienteRepository.findByCorreo(correo).orElseThrow();
         List<Evento> eventos = iEventoRepository.getAllByCliente(cliente);
-
 
 
         eventos.forEach(evento -> {
@@ -131,6 +132,7 @@ public EventoResponse obtenerEventoPorCodigo(String codigo) {
             });
 
             EventoResponse response = EventoResponse.builder()
+                    .codigo(evento.getCodigo())
                     .nombre(evento.getNombre())
                     .pais(evento.getPais())
                     .region(evento.getRegion())
@@ -173,23 +175,13 @@ public EventoResponse obtenerEventoPorCodigo(String codigo) {
         // Crear lista de EventoServicio
         List<EventoServicio> eventoServicioList = new ArrayList<>();
 
-        for (CarritoRequest carritoRequest : request.getCart()) {
-            // Buscar el servicio correspondiente en el repositorio
-            Servicio servicio = iServicioRepository.findByCodigo(carritoRequest.getCodigo())
-                    .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
 
-            // Crear un EventoServicio y asignar el servicio y la cantidad
-            EventoServicio eventoServicio = EventoServicio.builder()
-                    .servicio(servicio)
-                    .cantidad(carritoRequest.getQuantity())
-                    .build();
-
-            // Agregar el EventoServicio a la lista
-            eventoServicioList.add(eventoServicio);
-        }
+        //Codigo para evento
+        UUID uuid = UUID.randomUUID();
 
         // Crear y guardar evento
         Evento evento = Evento.builder()
+                .codigo("EVENT-" + uuid.toString().substring(0, 8))
                 .nombre(request.getNombreEvento())
                 .callePrincipal(request.getCallePrincipal())
                 .calleSecundaria(request.getCalleSecundaria())
@@ -200,7 +192,6 @@ public EventoResponse obtenerEventoPorCodigo(String codigo) {
                 .precio(precio.add(iva))
                 .iva(iva)
                 .hora(localTime)
-                .eventoServicios(eventoServicioList)
                 .cliente(cliente)
                 .build();
 
@@ -208,6 +199,21 @@ public EventoResponse obtenerEventoPorCodigo(String codigo) {
         this.iEventoServicioRepository.saveAll(eventoServicioList);
 
 
+        for (CarritoRequest carritoRequest : request.getCart()) {
+            // Buscar el servicio correspondiente en el repositorio
+            Servicio servicio = iServicioRepository.findByCodigo(carritoRequest.getCodigo())
+                    .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+
+            // Crear un EventoServicio y asignar el servicio y la cantidad
+            EventoServicio eventoServicio = EventoServicio.builder()
+                    .servicio(servicio)
+                    .evento(evento)
+                    .cantidad(carritoRequest.getQuantity())
+                    .build();
+
+            // Agregar el EventoServicio a la lista
+            eventoServicioList.add(eventoServicio);
+        }
         List<Evento> list = cliente.getEventos();
         list.add(evento);
         cliente.setEventos(list);
@@ -222,4 +228,5 @@ public EventoResponse obtenerEventoPorCodigo(String codigo) {
                 .build();
         iPagoRepository.save(pago);
     }
+
 }
