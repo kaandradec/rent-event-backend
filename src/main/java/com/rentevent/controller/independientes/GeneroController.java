@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class GeneroController {
     @Autowired
     GeneroService generoService;
-
     @GetMapping(value = "/get")
     public ResponseEntity<GeneroResponse> obtenerCliente() {
         List<String> generos = generoService.getGeneros()
