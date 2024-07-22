@@ -33,6 +33,16 @@ public class PagoService {
     private final IPagosRepository iPagosRepository;
     private final IFacturaRepository iFacturaRepository;
 
+    /**
+     * Valida si un evento ha sido completamente pagado basándose en los pagos realizados.
+     * Este método recupera el cliente y el evento basado en los detalles proporcionados en la solicitud.
+     * Luego, suma el monto total pagado de todos los pagos asociados. Si el monto total pagado coincide
+     * con el precio del evento, indica que el evento está completamente pagado.
+     *
+     * @param request La solicitud que contiene los detalles para identificar al cliente y al evento.
+     * @return {@code Boolean} indicando si el evento está completamente pagado ({@code true}) o no ({@code false}).
+     * @throws SecurityException Si el cliente o el evento no pueden ser encontrados basado en los detalles proporcionados.
+     */
     public Boolean validarEventoPagado(ValidarPagoRequest request) {
         Cliente cliente = iClienteRepository.findByCorreo(request.getCorreo())
                 .orElseThrow(() -> new SecurityException("Cliente no encontrado - validarGenerarFactura"));
@@ -65,7 +75,7 @@ public class PagoService {
 //                .evento(evento)
 //                .build());
 
-//        List<DetalleFactura> detalleFacturas = new ArrayList<>();
+    //        List<DetalleFactura> detalleFacturas = new ArrayList<>();
 //        Set<Servicio> servicioSet = new HashSet<>();
 //
 //        evento.getEventoServicios().forEach(eventoServicio -> {
@@ -90,6 +100,20 @@ public class PagoService {
 //                .total(evento.getPrecio()).build());
 //
 //    }
+
+    /**
+     * Genera un pago para un evento específico.
+     * Este método intenta crear y guardar un pago basado en la información proporcionada en la solicitud.
+     * Primero, busca el evento por su código y recupera los datos de facturación del cliente asociado al evento.
+     * Luego, construye un objeto de pago con los detalles proporcionados, incluyendo el método de pago como efectivo,
+     * y lo guarda en la base de datos. Si el proceso es exitoso, imprime un mensaje de confirmación.
+     * En caso de error, como no encontrar el evento, se captura la excepción, se imprime un mensaje de error y se lanza
+     * la excepción para manejo externo.
+     *
+     * @param request La solicitud que contiene los detalles necesarios para generar el pago, incluyendo el código del evento
+     *                y el monto del pago.
+     * @throws Exception Si ocurre un error durante el proceso, como no encontrar el evento especificado.
+     */
     @Transactional
     public void generarPago(PagoRequest request) throws Exception {
         try {

@@ -26,6 +26,18 @@ public class CloudinaryService {
     @Autowired
     private Cloudinary cloudinary;
 
+    /**
+     * Sube un archivo a Cloudinary.
+     * Este método maneja la carga de archivos a Cloudinary utilizando el identificador único (fileName) proporcionado.
+     * El archivo se sube con un identificador público personalizado para facilitar su recuperación y gestión.
+     * En caso de éxito, devuelve una respuesta que incluye el URL seguro y el ID público del archivo subido.
+     * Si ocurre un error durante la carga, se lanza una excepción personalizada indicando el problema.
+     *
+     * @param file     El archivo a subir.
+     * @param fileName El nombre único para el archivo, que se usa para crear el identificador público en Cloudinary.
+     * @return CloudinaryResponse que contiene el URL seguro y el ID público del archivo subido.
+     * @throws FuncErrorException Si ocurre un error durante la carga del archivo.
+     */
     @Transactional
     public CloudinaryResponse uploadFile(MultipartFile file, String fileName) {
         try {
@@ -38,6 +50,16 @@ public class CloudinaryService {
         }
     }
 
+    /**
+     * Elimina un archivo de Cloudinary.
+     * Este método maneja la eliminación de archivos en Cloudinary utilizando el ID público del archivo.
+     * Si la eliminación es exitosa, devuelve el resultado de la operación.
+     * En caso de error durante la eliminación, se lanza una excepción personalizada.
+     *
+     * @param publicId El ID público del archivo en Cloudinary a eliminar.
+     * @return String que indica el resultado de la operación de eliminación.
+     * @throws FuncErrorException Si ocurre un error durante la eliminación del archivo.
+     */
     @Transactional
     public String deleteFile(String publicId) {
         try {

@@ -20,6 +20,17 @@ public class TransporteService {
     private final ITransporteRepository iTransporteRepository;
     private final IEventoTransporteRepository iEventoTransporteRepository;
 
+    /**
+     * Reserva transportes para un evento basado en el número de personas asistentes.
+     * Este método busca todos los transportes disponibles y calcula cuántos son necesarios
+     * para acomodar a un número dado de personas, asumiendo una capacidad de 20 personas por transporte.
+     * Si no hay suficientes transportes disponibles, se lanza una excepción.
+     * Los transportes son seleccionados aleatoriamente y reservados para el evento.
+     *
+     * @param personas El número de personas que asistirán al evento y que necesitan transporte.
+     * @param evento   El evento para el cual se está reservando el transporte.
+     * @throws Exception Si no hay transportes registrados o no hay suficientes transportes disponibles.
+     */
     public void reservarTransporte(Integer personas, Evento evento) throws Exception {
         List<Transporte> transporteList = iTransporteRepository.findAll();
         int totalTransportesDisponibles = transporteList.size();

@@ -26,6 +26,19 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
 
+    /**
+     * Configura la cadena de filtros de seguridad para la aplicación.
+     * Este método define la configuración de seguridad utilizando HttpSecurity para especificar qué
+     * peticiones requieren autenticación y cuáles están permitidas sin autenticación. Se deshabilita CSRF
+     * ya que se utilizará JWT para la autenticación. Se configura el manejo de sesiones para ser sin estado,
+     * adecuado para APIs REST donde no se requiere mantener estado de sesión en el servidor.
+     * Se especifican los patrones de URL y las autoridades requeridas para acceder a ellos.
+     * Finalmente, se añade un filtro personalizado para JWT antes del filtro de autenticación por nombre de usuario y contraseña.
+     *
+     * @param http Configuración de seguridad HTTP.
+     * @return La cadena de filtros de seguridad configurada.
+     * @throws Exception Si ocurre un error durante la configuración.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -56,6 +69,15 @@ public class SecurityConfig {
 
 
     }
+
+    /**
+     * Configura las políticas de CORS (Cross-Origin Resource Sharing) para la aplicación.
+     * Este método permite especificar qué orígenes pueden acceder a los recursos de la aplicación,
+     * qué métodos HTTP están permitidos y si se permiten credenciales en las solicitudes.
+     * La configuración se aplica a todas las rutas (/**).
+     *
+     * @return Un configurador de CORS que se registra como un bean en el contexto de Spring.
+     */
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {

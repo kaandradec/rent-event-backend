@@ -10,7 +10,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GeneroService {
-    public List<Genero> getGeneros(){
+    /**
+     * Obtiene todos los géneros disponibles.
+     * Este método utiliza la enumeración Genero para obtener todos sus valores y los convierte en una lista.
+     *
+     * @return Una lista de {@link Genero} que representa todos los géneros disponibles.
+     */
+    public List<Genero> getGeneros() {
         return Arrays.stream(Genero.values()).toList();
     }
 

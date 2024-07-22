@@ -19,6 +19,16 @@ public class CamionService {
     @Autowired
     private final ICamionRepository iCamionRepository;
     private final ICamionEventoRepository iCamionEventoRepository;
+
+    /**
+     * Reserva camiones para un evento específico basado en la cantidad de utilería solicitada.
+     * Este método calcula el número de camiones necesarios basándose en una regla de 1 camión por cada 20 sillas.
+     * Selecciona aleatoriamente los camiones disponibles y los asocia con el evento.
+     *
+     * @param request La cantidad de utilería solicitada para el evento.
+     * @param evento  El evento para el cual se reservan los camiones.
+     * @throws Exception Si no hay camiones registrados o no hay suficientes camiones disponibles.
+     */
     @Transactional
     public void reservarCamion(Integer request, Evento evento) throws Exception {
         List<Camion> camionList = iCamionRepository.findAll();

@@ -10,6 +10,14 @@ import java.util.Map;
 
 @Configuration
 public class CloudinaryConfig {
+    /**
+     * Configura y proporciona una instancia de Cloudinary.
+     * Este método carga las credenciales de Cloudinary (nombre del cloud, API key, API secret) desde variables de entorno
+     * utilizando Dotenv. Luego, configura Cloudinary con estas credenciales y retorna una instancia de Cloudinary.
+     * Esta instancia se registra como un bean en el contexto de Spring, permitiendo su inyección en otros componentes.
+     *
+     * @return Una instancia configurada de Cloudinary.
+     */
     @Bean
     public Cloudinary cloudinary() {
         Dotenv dotenv = Dotenv.load();

@@ -15,8 +15,17 @@ public class CorreoService {
     @Autowired
     IUsuarioRepository usuarioRepository;
 
-    public Boolean verificarCorreo(CorreoRequest request){
+    /**
+     * Verifica la existencia de un correo electrónico en los repositorios de clientes y usuarios.
+     * Este método busca el correo proporcionado en los repositorios de clientes y usuarios.
+     * Si el correo existe en alguno de los dos repositorios, devuelve verdadero, indicando que el correo ya está en uso.
+     * De lo contrario, devuelve falso, indicando que el correo no está registrado y puede ser utilizado.
+     *
+     * @param request La solicitud que contiene el correo electrónico a verificar.
+     * @return Boolean Verdadero si el correo ya está en uso, falso si está disponible.
+     */
+    public Boolean verificarCorreo(CorreoRequest request) {
         return (clienteRepository.findByCorreo(request.getCorreo()).isPresent()
-        || usuarioRepository.findByCorreo(request.getCorreo()).isPresent());
+                || usuarioRepository.findByCorreo(request.getCorreo()).isPresent());
     }
 }

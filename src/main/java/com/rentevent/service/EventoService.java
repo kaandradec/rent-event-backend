@@ -51,20 +51,15 @@ public class EventoService {
     @Autowired
     private IEventoPatrocinadorRepository iEventoPatrocinadorRepository;
 
-
-//    public EventoResponse listarUltimosEventos(CorreoRequest request) {
-//        List<String> eventos = new ArrayList<>();
-//        List<LocalDate> fechas = new ArrayList<>();
-//        iEventoRepository.findByClienteOrderByIdDesc(
-//                iClienteRepository.findByCorreo(request.getCorreo()).orElseThrow()
-//        ).stream().forEach(evento -> {
-//            eventos.add(evento.getNombre());
-//            fechas.add(evento.getFecha());
-//        });
-//
-//        return EventoResponse.builder().nombreEvento(eventos).fechaEvento(fechas).build();
-//    }
-
+    /**
+     * Obtiene la respuesta detallada de un evento por su código.
+     * Este método recupera un evento específico por su código y construye una respuesta detallada que incluye
+     * información sobre el evento, los pagos asociados y los servicios incluidos en el evento.
+     *
+     * @param codigo El código único del evento a buscar.
+     * @return EventoResponse Una representación detallada del evento, incluyendo pagos y servicios.
+     * @throws NoSuchElementException Si el evento con el código proporcionado no se encuentra.
+     */
     public EventoResponse obtenerEventoPorCodigo(String codigo) {
         System.out.println("CODIGO" + codigo);
         Evento evento = this.iEventoRepository.findByCodigo(codigo).orElseThrow();
@@ -123,6 +118,16 @@ public class EventoService {
                 .build();
     }
 
+    /**
+     * Lista los eventos asociados a un cliente específico.
+     * Este método recupera todos los eventos vinculados a un cliente, identificado por su correo electrónico,
+     * y construye una lista de respuestas detalladas de cada evento. La información incluye detalles del evento,
+     * así como los pagos asociados a cada uno.
+     *
+     * @param correo El correo electrónico del cliente cuyos eventos se quieren listar.
+     * @return Una lista de {@link EventoResponse} con los detalles de cada evento asociado al cliente.
+     * @throws NoSuchElementException Si no se encuentra el cliente con el correo proporcionado.
+     */
     public List<EventoResponse> listarEventosDeCliente(String correo) {
         List<EventoResponse> listaEventoResposes = new ArrayList<>();
         Cliente cliente = iClienteRepository.findByCorreo(correo).orElseThrow();
@@ -163,6 +168,17 @@ public class EventoService {
         return listaEventoResposes;
     }
 
+    /**
+     * Genera un nuevo evento basado en la solicitud proporcionada.
+     * Este método procesa la solicitud de creación de un evento, calculando el precio total, el IVA,
+     * y generando los servicios asociados al evento. También maneja la asignación de patrocinadores
+     * para eventos con un gran número de asistentes y realiza el registro de pagos correspondientes.
+     * Finalmente, reserva los recursos necesarios como camiones y transporte.
+     *
+     * @param request La solicitud que contiene los detalles del evento a generar.
+     * @throws RuntimeException Si ocurre un error durante la generación del evento, como cliente no encontrado,
+     *                          servicio no encontrado, o fallos en la reserva de recursos.
+     */
     @Transactional
     public void generarEvento(EventoRequest request) {
         int totalServicios = 0;
@@ -283,12 +299,30 @@ public class EventoService {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Cancela un evento específico.
+     * Este método busca un evento por su código y cambia su estado a "CANCELADO".
+     * Luego, guarda los cambios en el repositorio. Si el evento no se encuentra, se lanza una excepción.
+     *
+     * @param codigo El código único del evento a cancelar.
+     * @throws NoSuchElementException Si el evento con el código proporcionado no se encuentra.
+     */
     public void cancelarEvento(String codigo) {
         Evento evento = this.iEventoRepository.findByCodigo(codigo).orElseThrow();
         evento.setEstado("CANCELADO");
         this.iEventoRepository.save(evento);
     }
 
+    /**
+     * Guarda una incidencia relacionada con un evento específico.
+     * Este método busca un evento por su código y le asigna una nueva incidencia con la descripción proporcionada.
+     * Luego, guarda los cambios en el repositorio. Si el evento no se encuentra, se lanza una excepción.
+     *
+     * @param codigoEvento El código único del evento al que se le asignará la incidencia.
+     * @param descripcion  La descripción de la incidencia a guardar.
+     * @throws NoSuchElementException Si el evento con el código proporcionado no se encuentra.
+     */
     public void guardarIncidencia(String codigoEvento, String descripcion) {
         Evento evento = this.iEventoRepository.findByCodigo(codigoEvento).orElseThrow();
         Incidencia incidencia = Incidencia.builder()
