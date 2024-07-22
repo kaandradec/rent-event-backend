@@ -38,6 +38,7 @@ public class SecurityConfig {
                                 .requestMatchers("/clientes/**").permitAll()
                                 .requestMatchers("/account/**").permitAll()
                                 .requestMatchers("/correo/**").permitAll()
+                                .requestMatchers("/pagos/**").hasAnyAuthority("CLIENTE")
                                 .requestMatchers("/facturas/**").permitAll()
                                 .requestMatchers("/eventos/**").hasAnyAuthority("CLIENTE", "USUARIO")
                                 .requestMatchers("/security/**").permitAll()

@@ -48,5 +48,17 @@ public class Tarjeta {
     private Cliente cliente;
     @OneToMany(mappedBy = "tarjeta", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Pago> pagos;
+
+    @Override
+    public String toString() {
+        return "Tarjeta{" +
+                "id=" + id +
+                ", token='" + token + '\'' +
+                ", tipo='" + tipo + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", digitos='" + digitos + '\'' +
+                ", fechaExpiracion=" + fechaExpiracion +
+                '}';
+    }
 }
 

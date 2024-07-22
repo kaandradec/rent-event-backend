@@ -61,7 +61,6 @@ public class Cliente implements UserDetails {
     @Column(name = "clie_rol")
     private Rol rol;
 
-
     @OneToOne
     @JoinColumn(name = "dafa_id", unique = true)
     private DatosFacturacion datosFacturacion;
@@ -109,4 +108,27 @@ public class Cliente implements UserDetails {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", contrasenia='" + contrasenia + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", pais='" + pais + '\'' +
+                ", region='" + region + '\'' +
+                ", callePrincipal='" + callePrincipal + '\'' +
+                ", calleSecundaria='" + calleSecundaria + '\'' +
+                ", referenciaDireccion='" + referenciaDireccion + '\'' +
+                ", prefijo='" + prefijo + '\'' +
+                ", correo='" + correo + '\'' +
+                ", genero=" + genero +
+                ", rol=" + rol +
+                ", datosFacturacion=" + datosFacturacion.getNombreCliente() +
+                ", facturas=" + facturas.size() +
+                ", tarjetas=" + tarjetas.size() +
+                ", eventos=" + eventos.size() +
+                ", preguntaSeguras=" + preguntaSeguras.size() +
+                '}';
+    }
 }

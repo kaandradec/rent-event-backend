@@ -40,7 +40,7 @@ public class DetalleFactura {
     @JoinColumn(name = "fact_id", nullable = false)
     private Factura factura;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.ALL })
     @JoinTable(
             name = "defactura_servicio",
             joinColumns = @JoinColumn(name = "defa_id"),
@@ -48,7 +48,7 @@ public class DetalleFactura {
     )
     private Set<Servicio> servicios = new HashSet<>();
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.ALL })
     @JoinTable(
             name = "defactura_utileria",
             joinColumns = @JoinColumn(name = "defa_id"),
@@ -56,7 +56,7 @@ public class DetalleFactura {
     )
     private Set<Utileria> utilerias = new HashSet<>();
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.ALL })
     @JoinTable(
             name = "defactura_transporte",
             joinColumns = @JoinColumn(name = "defa_id"),
@@ -64,7 +64,7 @@ public class DetalleFactura {
     )
     private Set<Transporte> transportes = new HashSet<>();
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.ALL })
     @JoinTable(
             name = "defactura_camion",
             joinColumns = @JoinColumn(name = "defa_id"),

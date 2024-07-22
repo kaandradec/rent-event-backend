@@ -1,5 +1,6 @@
 package com.rentevent.controller;
 
+import com.rentevent.dto.request.PagoRequest;
 import com.rentevent.dto.request.ValidarPagoRequest;
 import com.rentevent.service.FacturaService;
 import com.rentevent.service.PagoService;
@@ -17,6 +18,23 @@ public class PagoController {
     private FacturaService facturaService;
     @Autowired
     private PagoService pagoService;
+
+    @PostMapping(value = "/nuevo")
+    public ResponseEntity<?> generarPagosCompletados(@RequestBody PagoRequest request) {
+        System.out.println("\n\n\n\n\n\n");
+        System.out.println(request.toString());
+        System.out.println("\n\n\n\n\n\n");
+
+
+        try {
+            pagoService.generarPago(request);
+            return ResponseEntity.accepted().body("hola");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body("Errorrrrrr");
+        }
+    }
 
     @PutMapping(value = "/validar")
     public ResponseEntity<?> validarPagosCompletados(@RequestBody ValidarPagoRequest request) {

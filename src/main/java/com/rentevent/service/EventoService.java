@@ -5,6 +5,7 @@ import com.rentevent.dto.request.EventoRequest;
 import com.rentevent.dto.response.EventoResponse;
 import com.rentevent.dto.response.PagoResponse;
 import com.rentevent.model.cliente.Cliente;
+import com.rentevent.model.enums.MetodoPago;
 import com.rentevent.model.evento.Evento;
 import com.rentevent.model.evento.EventoPatrocinador;
 import com.rentevent.model.evento.EventoServicio;
@@ -25,10 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -161,23 +159,22 @@ public class EventoService {
             listaEventoResposes.add(response);
         });
 
+        System.out.println(listaEventoResposes);
         return listaEventoResposes;
     }
 
     @Transactional
     public void generarEvento(EventoRequest request) {
-        Integer totalServicios = 0;
+        int totalServicios = 0;
 
-        String fecha = (request.getFecha().substring(0,
-                request.getFecha().indexOf("T")
-        ));
+        String fecha = request.getFecha().substring(0, request.getFecha().indexOf("T"));
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(request.getFecha(), DateTimeFormatter.ISO_ZONED_DATE_TIME);
 
         // Extraer el objeto LocalTime
         LocalTime localTime = zonedDateTime.toLocalTime();
 
         // Encontrar cliente por correo
-        Cliente cliente = this.iClienteRepository.findByCorreo(request.getCorreo())
+        Cliente cliente = iClienteRepository.findByCorreo(request.getCorreo())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
         List<Evento> list = cliente.getEventos();
@@ -186,12 +183,13 @@ public class EventoService {
         BigDecimal precio = Arrays.stream(request.getCart())
                 .map(CarritoRequest::getCosto)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         // Calcular IVA
         BigDecimal iva = precio.multiply(new BigDecimal("0.15"));
+        BigDecimal totalPrecio = precio.add(iva);
 
         // Crear lista de EventoServicio
         List<EventoServicio> eventoServicioList = new ArrayList<>();
-
 
         //Codigo para evento
         UUID uuid = UUID.randomUUID();
@@ -207,67 +205,84 @@ public class EventoService {
                 .pais(request.getPais())
                 .referenciaDireccion(request.getReferencia())
                 .region(request.getCiudad())
-                .precio(precio.add(iva))
+                .precio(request.getTotal())
                 .iva(iva)
                 .hora(localTime)
                 .cliente(cliente)
                 .build();
 
-        this.iEventoRepository.save(evento);
+        iEventoRepository.save(evento);
 
         // Crear lista de EventoServicio
         for (CarritoRequest carritoRequest : request.getCart()) {
-            // Buscar el servicio correspondiente en el repositorio
-            Servicio servicio = this.iServicioRepository.findByCodigo(carritoRequest.getCodigo())
+            Servicio servicio = iServicioRepository.findByCodigo(carritoRequest.getCodigo())
                     .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
-            totalServicios = totalServicios + carritoRequest.getQuantity();
+            totalServicios += carritoRequest.getQuantity();
 
-            // Crear un EventoServicio y asignar el servicio y la cantidad
             EventoServicio eventoServicio = EventoServicio.builder()
-                    .evento(evento) // Asignar el evento
+                    .evento(evento)
                     .servicio(servicio)
                     .cantidad(carritoRequest.getQuantity())
                     .build();
 
-            // Agregar el EventoServicio a la lista
             eventoServicioList.add(eventoServicio);
         }
 
-        //todo : valido para 1 patrocinador xd
-        if (Integer.valueOf(request.getAsistentes()) > 100) {
-            Patrocinador patrocinador;
-            patrocinador = iPatrocinadorRepository.findAll().get(0);
-            iEventoPatrocinadorRepository.save(
-                    EventoPatrocinador.builder()
-                            .evento(evento)
-                            .patrocinador(patrocinador)
-                            .build());
+        if (Integer.parseInt(request.getAsistentes()) > 100) {
+            Patrocinador patrocinador = iPatrocinadorRepository.findAll().get(0);
+            iEventoPatrocinadorRepository.save(EventoPatrocinador.builder()
+                    .evento(evento)
+                    .patrocinador(patrocinador)
+                    .build());
         }
 
-
-        this.iEventoServicioRepository.saveAll(eventoServicioList);
+        iEventoServicioRepository.saveAll(eventoServicioList);
 
         list.add(evento);
         cliente.setEventos(list);
-        this.iClienteRepository.save(cliente);
+        iClienteRepository.save(cliente);
 
-        // Crear y guardar pago
-        Pago pago = Pago.builder()
-                .fecha(Date.valueOf(LocalDate.now()))
-                .monto(precio.add(iva))
-                .evento(evento)
-                .tarjeta(cliente.getTarjetas().get(0))
-                .build();
-        this.iPagoRepository.save(pago);
+        BigDecimal pagoMonto = request.getPago();
+
+        if (Objects.equals(pagoMonto, request.getTotal())) {
+            // Crear y guardar el primer pago
+            Pago pago = Pago.builder()
+                    .fecha(Date.valueOf(LocalDate.now()))
+                    .monto(pagoMonto)
+                    .evento(evento)
+                    .metodoPago(MetodoPago.Tarjeta)
+                    .tarjeta(cliente.getTarjetas().get(cliente.getTarjetas().size() - 1))
+                    .build();
+            iPagoRepository.save(pago);
+
+            // Crear y guardar el segundo pago
+            Pago pago2 = Pago.builder()
+                    .fecha(Date.valueOf(LocalDate.now()))
+                    .monto(pagoMonto)
+                    .evento(evento)
+                    .metodoPago(MetodoPago.Tarjeta)
+                    .tarjeta(cliente.getTarjetas().get(cliente.getTarjetas().size() - 1))
+                    .build();
+            iPagoRepository.save(pago2);
+        } else {
+            // Crear y guardar un solo pago
+            Pago pago = Pago.builder()
+                    .fecha(Date.valueOf(LocalDate.now()))
+                    .monto(pagoMonto)
+                    .evento(evento)
+                    .metodoPago(MetodoPago.Tarjeta)
+                    .tarjeta(cliente.getTarjetas().get(cliente.getTarjetas().size() - 1))
+                    .build();
+            iPagoRepository.save(pago);
+        }
 
         try {
             camionService.reservarCamion(totalServicios, evento);
-            transporteService.reservarTransporte(Integer.valueOf(request.getAsistentes()), evento);
+            transporteService.reservarTransporte(Integer.parseInt(request.getAsistentes()), evento);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-
     public void cancelarEvento(String codigo) {
         Evento evento = this.iEventoRepository.findByCodigo(codigo).orElseThrow();
         evento.setEstado("CANCELADO");

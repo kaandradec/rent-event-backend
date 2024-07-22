@@ -43,4 +43,15 @@ public class Camion {
     @OneToMany(mappedBy = "camion")
     private List<CamionEvento> camionEventos;
 
+    @Override
+    public String toString() {
+        return "Camion{" +
+                ", matricula='" + matricula + '\'' +
+                ", marca='" + marca + '\'' +
+                ", modelo='" + modelo + '\'' +
+                ", tipo='" + tipo + '\'' +
+                ", capacidad=" + capacidad +
+                ", proveedor=" + proveedor.getNombre() +
+                '}';
+    }
 }

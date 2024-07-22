@@ -11,23 +11,13 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventoRequest {
-    private String correo;
+public class PagoRequest {
+    private String evento;
     private String nombreTargeta;
     private String numeroTarjeta;
-    private String fecha;
     private String direccionFactura;
     private String nombreFactura;
-    private String pais;
-    private String ciudad;
     private String numeroCedula;
-    private String nombreEvento;
-    private String descripcionEvento;
-    private String callePrincipal;
-    private String calleSecundaria;
-    private String referencia;
-    private String asistentes;
-    private CarritoRequest[] cart;
     private BigDecimal pago;
-    private BigDecimal total;
+
 }

@@ -31,4 +31,6 @@ public class DatosFacturacion {
 
     @OneToOne(mappedBy = "datosFacturacion", cascade = CascadeType.ALL)
     private Cliente cliente;
+
+
 }

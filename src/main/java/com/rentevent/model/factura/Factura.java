@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -32,10 +33,10 @@ public class Factura {
     private Date fechaEmision;
 
     @Column(name = "fact_monto_total", nullable = false)
-    private Double total;
+    private BigDecimal total;
 
     @Column(name = "fact_iva")
-    private Double iva;
+    private BigDecimal iva;
 
     @Column(name = "fact_numero", nullable = false)
     @SequenceGenerator(name = "seq_num_factura", sequenceName = "seq_num_factura", allocationSize = 1)

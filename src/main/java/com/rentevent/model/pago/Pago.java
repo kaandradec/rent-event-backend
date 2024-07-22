@@ -47,4 +47,14 @@ public class Pago {
     @ManyToOne
     @JoinColumn(name = "tarjeta_id")
     private Tarjeta tarjeta;
+
+    @Override
+    public String toString() {
+        return "Pago{" +
+                "id=" + id +
+                ", fecha=" + fecha +
+                ", monto=" + monto +
+                ", metodoPago=" + metodoPago +
+                '}';
+    }
 }

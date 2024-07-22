@@ -34,8 +34,12 @@ public class Evento {
 
     @Column(name = "even_nombre")
     private String nombre;
+
     @Column(name = "even_estado")
     private String estado; // ACTIVO CANCELADO COMPLETADO
+
+    @Column(name = "even_isPagado")
+    private Boolean isPagado;
 
     @Column(name = "even_fecha")
     private LocalDate fecha;
@@ -95,4 +99,24 @@ public class Evento {
 
     @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<Pago> pagos;
+
+    @Override
+    public String toString() {
+        return "Evento{" +
+                ", codigo='" + codigo + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", estado='" + estado + '\'' +
+                ", isPagado=" + isPagado +
+                ", fecha=" + fecha +
+                ", pais='" + pais + '\'' +
+                ", region='" + region + '\'' +
+                ", precio=" + precio +
+                ", iva=" + iva +
+                ", callePrincipal='" + callePrincipal + '\'' +
+                ", calleSecundaria='" + calleSecundaria + '\'' +
+                ", referenciaDireccion='" + referenciaDireccion + '\'' +
+                ", hora=" + hora +
+                ", duracion=" + duracion +
+                '}';
+    }
 }
