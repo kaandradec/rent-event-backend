@@ -1,10 +1,9 @@
 package com.rentevent.controller;
 
 import com.rentevent.dto.request.ServicioRequest;
-import com.rentevent.dto.response.EventoResponse;
-import com.rentevent.model.enums.EstadoServicio;
-import com.rentevent.model.enums.TipoServicio;
-import com.rentevent.model.servicio.ServicioResponse;
+import com.rentevent.dto.request.ServiciosEventoRequest;
+import com.rentevent.dto.response.ServicioFacturaResponse;
+import com.rentevent.dto.response.ServicioResponse;
 import com.rentevent.service.ServicioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/servicios")
 @RequiredArgsConstructor
-// Lombok genera un constructor con los atributos marcados como final, hace que no sea necesario inyectar las dependencias con @Autowired
 @CrossOrigin(origins = {"http://localhost:5173"})
-// Permite el acceso a los recursos desde el servidor local de React: Vite -> http://localhost:5173
 public class ServicioController {
     private final ServicioService servicioService;
 
@@ -37,6 +34,17 @@ public class ServicioController {
     public ResponseEntity<?> getServicios() {
         List<ServicioResponse> lista = this.servicioService.obtenerServicios();
         return ResponseEntity.ok(lista);
+    }
+
+    @PutMapping("/facturar")
+    public ResponseEntity<?> getServiciosEvento(@RequestBody ServiciosEventoRequest request) {
+        try {
+
+            List<ServicioFacturaResponse> lista = this.servicioService.obtenerServiciosPorEvento(request);
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();        }
     }
 
     @PreAuthorize("hasAuthority('USUARIO')")

@@ -1,15 +1,12 @@
 package com.rentevent.controller;
 
-import com.rentevent.dto.request.CorreoRequest;
 import com.rentevent.dto.request.EventoRequest;
 import com.rentevent.dto.request.IncidenciaRequest;
 import com.rentevent.dto.response.EventoResponse;
-import com.rentevent.model.servicio.ServicioResponse;
 import com.rentevent.service.EventoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

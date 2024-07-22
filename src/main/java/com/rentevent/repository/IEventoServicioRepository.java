@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IEventoServicioRepository extends JpaRepository<EventoServicio, Integer> {
-    List<EventoServicio> getAllByEvento(Evento evento);
+    List<EventoServicio> findByEvento(Evento evento);
 
     List<EventoServicio> findAllByEventoEquals(Evento evento);
 }

@@ -1,18 +1,17 @@
 package com.rentevent.service;
 
 import com.rentevent.dto.request.ServicioRequest;
+import com.rentevent.dto.request.ServiciosEventoRequest;
 import com.rentevent.dto.response.CloudinaryResponse;
-import com.rentevent.dto.response.EventoResponse;
+import com.rentevent.dto.response.ServicioFacturaResponse;
+import com.rentevent.dto.response.ServicioResponse;
 import com.rentevent.exception.NotFoundException;
 import com.rentevent.model.evento.Evento;
+import com.rentevent.model.evento.EventoServicio;
 import com.rentevent.model.imagen.Imagen;
 import com.rentevent.model.proveedor.Proveedor;
 import com.rentevent.model.servicio.Servicio;
-import com.rentevent.model.servicio.ServicioResponse;
-import com.rentevent.repository.IEventoRepository;
-import com.rentevent.repository.IImagenRepository;
-import com.rentevent.repository.IProveedorRepository;
-import com.rentevent.repository.IServicioRepository;
+import com.rentevent.repository.*;
 import com.rentevent.util.FileUploadUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +36,10 @@ public class ServicioService {
     private final IImagenRepository imagenRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
-
     @Autowired
     private IEventoRepository iEventoRepository;
+    @Autowired
+    private IEventoServicioRepository iEventoServicioRepository;
 
     /**
      * Obtiene los detalles de un servicio específico por su código.
@@ -263,4 +266,23 @@ public class ServicioService {
         this.servicioRepository.save(servicio);
     }
 
+    public List<ServicioFacturaResponse> obtenerServiciosPorEvento(ServiciosEventoRequest request) {
+        Evento evento = iEventoRepository.findByCodigo(request.getCodEvento())
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
+
+        List<EventoServicio> eventoServicios = iEventoServicioRepository.findByEvento(evento);
+
+        List<Servicio> servicioList = eventoServicios.stream()
+                .map(EventoServicio::getServicio)
+                .collect(Collectors.toList());
+        List<ServicioFacturaResponse> servicioFacturaResponses = new ArrayList<>();
+        servicioList.forEach(servicio -> servicioFacturaResponses.add(
+                ServicioFacturaResponse.builder().precio(servicio.getCosto())
+                        .descripcion(servicio.getDescripcion())
+                        .nombre(servicio.getNombre())
+                        .build()
+        ));
+
+        return servicioFacturaResponses;
+    }
 }

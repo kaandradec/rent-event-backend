@@ -1,4 +1,4 @@
-package com.rentevent.model.servicio;
+package com.rentevent.dto.response;
 
 import com.rentevent.model.enums.TipoServicio;
 import com.rentevent.model.evento.EventoServicio;

@@ -1,12 +1,8 @@
 package com.rentevent.controller;
 
-import com.rentevent.model.servicio.ServicioDTO;
-import com.rentevent.model.servicio.ServicioRequest;
-import com.rentevent.model.servicio.ServicioResponse;
 import com.rentevent.service.ServicioService;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

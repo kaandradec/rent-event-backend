@@ -1,7 +1,6 @@
 package com.rentevent.dto.response;
 
 
-import com.rentevent.model.servicio.ServicioResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

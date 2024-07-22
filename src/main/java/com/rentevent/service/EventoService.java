@@ -13,7 +13,7 @@ import com.rentevent.model.incidencia.Incidencia;
 import com.rentevent.model.pago.Pago;
 import com.rentevent.model.patrocinador.Patrocinador;
 import com.rentevent.model.servicio.Servicio;
-import com.rentevent.model.servicio.ServicioResponse;
+import com.rentevent.dto.response.ServicioResponse;
 import com.rentevent.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
