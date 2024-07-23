@@ -67,9 +67,9 @@ public class Evento {
 
     @Column(name = "even_hora")
     private LocalTime hora;
-
-    @Column(name = "even_duracion")
-    private LocalTime duracion;
+//
+//    @Column(name = "even_duracion")
+//    private LocalTime duracion;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "inci_id")
@@ -116,7 +116,6 @@ public class Evento {
                 ", calleSecundaria='" + calleSecundaria + '\'' +
                 ", referenciaDireccion='" + referenciaDireccion + '\'' +
                 ", hora=" + hora +
-                ", duracion=" + duracion +
                 '}';
     }
 }

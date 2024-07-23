@@ -22,14 +22,14 @@ public class EventoServicio {
     @Column(name = "even_serv_id")
     private Integer id;
 
-    @Column(name = "even_serv_personalizacion")
-    private String personalizacion;
+//    @Column(name = "even_serv_personalizacion")
+//    private String personalizacion;
 
     @Column(name = "even_serv_cantidad")
     private Integer cantidad;
-
-    @Column(name = "even_serv_costo")
-    private BigDecimal costo;
+//
+//    @Column(name = "even_serv_costo")
+//    private BigDecimal costo;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "even_id")

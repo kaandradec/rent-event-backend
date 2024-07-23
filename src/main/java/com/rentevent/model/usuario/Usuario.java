@@ -34,25 +34,25 @@ public class Usuario implements UserDetails {
     private String correo;
     @Column(name = "usua_contrasenia")
     private String contrasenia;
-    @Column(name = "usua_apellido")
-    private String apellido;
+//    @Column(name = "usua_apellido")
+//    private String apellido;
     @Column(name = "usua_nombre")
     private String nombre;
-    @Column(name = "usua_sueldo")
-    private BigDecimal sueldo;
+//    @Column(name = "usua_sueldo")
+//    private BigDecimal sueldo;
     @Column(name = "usua_fecha_incorporacion")
     private LocalDate fechaIncormporacion;
     @Enumerated(EnumType.STRING)
     @Column(name = "usua_rol")
     private Rol rol;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "usua_genero")
-    private Genero genero;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "usua_genero")
+//    private Genero genero;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PreguntaSegura> preguntasSeguras;
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Incidencia> incidencias;
+//    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Incidencia> incidencias;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(rol.name()));

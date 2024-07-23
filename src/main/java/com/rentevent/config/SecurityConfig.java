@@ -88,7 +88,8 @@ public class SecurityConfig {
                                 "http://localhost:5173",
                                 "http://localhost:3000",
                                 "http://192.168.56.1:5173",
-                                "http://192.168.100.16:5173"
+                                "http://192.168.100.16:5173",
+                                "https://g2hk2mnk-5174.brs.devtunnels.ms/"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true);

@@ -43,12 +43,12 @@ public class Cliente implements UserDetails {
     private String pais;
     @Column(name = "clie_region")
     private String region;
-    @Column(name = "clie_calle_principal")
-    private String callePrincipal;
-    @Column(name = "clie_calle_secundaria")
-    private String calleSecundaria;
-    @Column(name = "clie_referencia_direccion")
-    private String referenciaDireccion;
+//    @Column(name = "clie_calle_principal")
+//    private String callePrincipal;
+//    @Column(name = "clie_calle_secundaria")
+//    private String calleSecundaria;
+//    @Column(name = "clie_referencia_direccion")
+//    private String referenciaDireccion;
     @Column(name = "clie_prefijo")
     private String prefijo;
     @Column(name = "clie_correo")
@@ -117,9 +117,6 @@ public class Cliente implements UserDetails {
                 ", telefono='" + telefono + '\'' +
                 ", pais='" + pais + '\'' +
                 ", region='" + region + '\'' +
-                ", callePrincipal='" + callePrincipal + '\'' +
-                ", calleSecundaria='" + calleSecundaria + '\'' +
-                ", referenciaDireccion='" + referenciaDireccion + '\'' +
                 ", prefijo='" + prefijo + '\'' +
                 ", correo='" + correo + '\'' +
                 ", genero=" + genero +

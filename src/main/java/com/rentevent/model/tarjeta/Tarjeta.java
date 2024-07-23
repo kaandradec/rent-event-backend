@@ -40,9 +40,6 @@ public class Tarjeta {
     @Column(name = "tarj_fecha_expiracion")
     private Date fechaExpiracion;
 
-    @Column(name = "tarj_proveedor")
-    private String proveedor;
-
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;

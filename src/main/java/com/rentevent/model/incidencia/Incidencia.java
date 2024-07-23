@@ -26,13 +26,13 @@ public class Incidencia {
 
     @Column(name = "inci_descripcion")
     private String descripcion;
-
-    @Column(name = "inci_estado")
-    private String estado;
+//
+//    @Column(name = "inci_estado")
+//    private String estado;
 
     @OneToOne(mappedBy = "incidencia")
     private Evento evento;
-    @ManyToOne
-    @JoinColumn(name = "usua_id")
-    private Usuario usuario;
+//    @ManyToOne
+//    @JoinColumn(name = "usua_id")
+//    private Usuario usuario;
 }
