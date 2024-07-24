@@ -56,7 +56,6 @@ public class AuthService {
                 .rol(usuario.getRol().name())
                 .correo(usuario.getUsername())
                 .nombre(usuario.getNombre())
-                .apellido(usuario.getApellido())
                 .build();
     }
 
@@ -101,7 +100,6 @@ public class AuthService {
                 .correo(request.getCorreo())
                 .contrasenia(passwordEncoder.encode(request.getContrasenia()))
                 .nombre(request.getNombre())
-                .apellido(request.getApellido())
                 .fechaIncormporacion(LocalDate.now())
                 .rol(Rol.USUARIO)
                 .build();

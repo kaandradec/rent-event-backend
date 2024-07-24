@@ -3,17 +3,15 @@ package com.rentevent.service;
 import com.rentevent.dto.request.PagoRequest;
 import com.rentevent.dto.request.ValidarPagoRequest;
 import com.rentevent.model.cliente.Cliente;
-import com.rentevent.model.datos_facturacion.DatosFacturacion;
-import com.rentevent.model.detalle_factura.DetalleFactura;
 import com.rentevent.model.enums.MetodoPago;
 import com.rentevent.model.evento.Evento;
 import com.rentevent.model.factura.Factura;
 import com.rentevent.model.pago.Pago;
-import com.rentevent.model.servicio.Servicio;
+import com.rentevent.model.tarjeta.Tarjeta;
 import com.rentevent.repository.IClienteRepository;
 import com.rentevent.repository.IEventoRepository;
 import com.rentevent.repository.IFacturaRepository;
-import com.rentevent.repository.IPagosRepository;
+import com.rentevent.repository.IPagoRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +28,9 @@ public class PagoService {
     @Autowired
     private final IClienteRepository iClienteRepository;
     private final IEventoRepository iEventoRepository;
-    private final IPagosRepository iPagosRepository;
+    private final IPagoRepository iPagoRepository;
     private final IFacturaRepository iFacturaRepository;
+    private final FacturaService facturaService;
 
     /**
      * Valida si un evento ha sido completamente pagado basándose en los pagos realizados.
@@ -114,28 +113,58 @@ public class PagoService {
      *                y el monto del pago.
      * @throws Exception Si ocurre un error durante el proceso, como no encontrar el evento especificado.
      */
+//    @Transactional
+//    public void generarPago(PagoRequest request) throws Exception {
+//        try {
+//            Evento evento = iEventoRepository.findByCodigo(request.getEvento())
+//                    .orElseThrow(() -> new Exception("Evento no encontrado"));
+//            Cliente cliente = evento.getCliente();
+//            DatosFacturacion datosFacturacion = cliente.getDatosFacturacion();
+//            UUID uuid = UUID.randomUUID();
+//
+//            Pago pago = Pago.builder()
+//                    .tarjeta(cliente.getTarjetas().get(cliente.getTarjetas().size() - 1))
+//                    .monto(new BigDecimal(String.valueOf(request.getPago())))
+//                    .fecha(Date.valueOf(LocalDate.now()))
+//                    .metodoPago(MetodoPago.Efectivo)
+//                    .evento(evento)
+//                    .build();
+//
+//            iPagosRepository.save(pago);
+//            System.out.println("Pago guardado exitosamente: " + pago);
+//        } catch (Exception e) {
+//            System.err.println("Error al generar el pago: " + e.getMessage());
+//            throw e;
+//        }
+//    }
     @Transactional
-    public void generarPago(PagoRequest request) throws Exception {
-        try {
-            Evento evento = iEventoRepository.findByCodigo(request.getEvento())
-                    .orElseThrow(() -> new Exception("Evento no encontrado"));
-            Cliente cliente = evento.getCliente();
-            DatosFacturacion datosFacturacion = cliente.getDatosFacturacion();
-            UUID uuid = UUID.randomUUID();
+    public void generarPago(Evento evento, BigDecimal monto, boolean esPagoCompleto) throws Exception {
+        Pago pago1 = Pago.builder()
+                .fecha(Date.valueOf(LocalDate.now()))
+                .monto(esPagoCompleto ? BigDecimal.ZERO : monto)
+                .evento(evento)
+                .metodoPago(MetodoPago.Tarjeta)
+                .tarjeta(evento.getCliente().getTarjetas().get(0))
+                .build();
+        iPagoRepository.save(pago1);
 
-            Pago pago = Pago.builder()
-                    .tarjeta(cliente.getTarjetas().get(cliente.getTarjetas().size() - 1))
-                    .monto(new BigDecimal(String.valueOf(request.getPago())))
-                    .fecha(Date.valueOf(LocalDate.now()))
-                    .metodoPago(MetodoPago.Efectivo)
-                    .evento(evento)
-                    .build();
+        Pago pago2 = Pago.builder()
+                .fecha(Date.valueOf(LocalDate.now()))
+                .monto(monto)
+                .evento(evento)
+                .metodoPago(MetodoPago.Tarjeta)
+                .tarjeta(evento.getCliente().getTarjetas().get(0))
+                .build();
+        iPagoRepository.save(pago2);
 
-            iPagosRepository.save(pago);
-            System.out.println("Pago guardado exitosamente: " + pago);
-        } catch (Exception e) {
-            System.err.println("Error al generar el pago: " + e.getMessage());
-            throw e;
+        if (esPagoCompleto) {
+            Factura factura = facturaService.generarFactura(evento, List.of(pago1, pago2));
+            pago1.setFactura(factura);
+            pago2.setFactura(factura);
+            iPagoRepository.save(pago1);
+            iPagoRepository.save(pago2);
         }
     }
+
+
 }

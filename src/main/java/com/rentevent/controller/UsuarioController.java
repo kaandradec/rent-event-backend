@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
         UsuarioResponse usuarioResponse = UsuarioResponse.builder()
                 .correo(usuario.getCorreo())
                 .nombre(usuario.getNombre())
-                .apellido(usuario.getApellido())
                 .build();
 
         return ResponseEntity.ok(usuarioResponse);

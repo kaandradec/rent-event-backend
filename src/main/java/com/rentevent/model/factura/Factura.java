@@ -28,40 +28,40 @@ public class Factura {
     @Column(name = "fact_id")
     private Integer id;
 
-    @Column(name = "fact_fecha_emision", nullable = false)
+    @Column(name = "fact_fecha_emision")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaEmision;
 
-    @Column(name = "fact_monto_total", nullable = false)
+    @Column(name = "fact_monto_total")
     private BigDecimal total;
 
     @Column(name = "fact_iva")
     private BigDecimal iva;
 
-    @Column(name = "fact_numero", nullable = false)
+    @Column(name = "fact_numero")
     @SequenceGenerator(name = "seq_num_factura", sequenceName = "seq_num_factura", allocationSize = 1)
     private String numero;
 
-    @Column(name = "fact_nombre_cliente", nullable = false)
+    @Column(name = "fact_nombre_cliente")
     private String nombreCliente;
 
-    @Column(name = "fact_cedula_cliente", nullable = false)
+    @Column(name = "fact_cedula_cliente")
     private String cedulaCliente;
 
-    @Column(name = "fact_direccion_cliente", nullable = false)
+    @Column(name = "fact_direccion_cliente")
     private String direccionCliente;
 
-    @Column(name = "fact_empresa", nullable = false)
+    @Column(name = "fact_empresa")
     private String empresa;
 
-    @Column(name = "fact_direccion_empresa", nullable = false)
+    @Column(name = "fact_direccion_empresa")
     private String direccionEmpresa;
 
-    @Column(name = "fact_RUC_empresa", nullable = false)
+    @Column(name = "fact_RUC_empresa")
     private String rucEmpresa;
 
     @ManyToOne
-    @JoinColumn(name = "clie_id", nullable = false)
+    @JoinColumn(name = "clie_id")
     private Cliente cliente;
 
     @OneToMany(mappedBy = "factura")

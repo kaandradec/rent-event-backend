@@ -4,16 +4,19 @@ import com.rentevent.dto.request.CarritoRequest;
 import com.rentevent.dto.request.EventoRequest;
 import com.rentevent.dto.response.EventoResponse;
 import com.rentevent.dto.response.PagoResponse;
+import com.rentevent.dto.response.ServicioResponse;
 import com.rentevent.model.cliente.Cliente;
+import com.rentevent.model.detalle_factura.DetalleFactura;
 import com.rentevent.model.enums.MetodoPago;
 import com.rentevent.model.evento.Evento;
 import com.rentevent.model.evento.EventoPatrocinador;
 import com.rentevent.model.evento.EventoServicio;
+import com.rentevent.model.factura.Factura;
 import com.rentevent.model.incidencia.Incidencia;
 import com.rentevent.model.pago.Pago;
 import com.rentevent.model.patrocinador.Patrocinador;
 import com.rentevent.model.servicio.Servicio;
-import com.rentevent.dto.response.ServicioResponse;
+import com.rentevent.model.tarjeta.Tarjeta;
 import com.rentevent.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,7 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +54,13 @@ public class EventoService {
     private IPatrocinadorRepository iPatrocinadorRepository;
     @Autowired
     private IEventoPatrocinadorRepository iEventoPatrocinadorRepository;
+    @Autowired
+    private PagoService pagoService;
+    @Autowired
+    private FacturaService facturaService;
+    @Autowired
+    private final IDetalleFacturaRepository iDetalleFacturaRepository;
+
 
     /**
      * Obtiene la respuesta detallada de un evento por su código.
@@ -131,8 +142,8 @@ public class EventoService {
     public List<EventoResponse> listarEventosDeCliente(String correo) {
         List<EventoResponse> listaEventoResposes = new ArrayList<>();
         Cliente cliente = iClienteRepository.findByCorreo(correo).orElseThrow();
-        List<Evento> eventos = iEventoRepository.getAllByCliente(cliente);
-
+        //los eventos mas prontos
+        List<Evento> eventos = iEventoRepository.getAllByClienteOrderByFechaDesc(cliente);
 
         eventos.forEach(evento -> {
             List<Pago> pagos = iPagoRepository.findByEvento(evento);
@@ -163,8 +174,8 @@ public class EventoService {
 
             listaEventoResposes.add(response);
         });
+        listaEventoResposes.sort(Comparator.comparing(EventoResponse::getFecha).reversed());
 
-        System.out.println(listaEventoResposes);
         return listaEventoResposes;
     }
 
@@ -185,32 +196,23 @@ public class EventoService {
 
         String fecha = request.getFecha().substring(0, request.getFecha().indexOf("T"));
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(request.getFecha(), DateTimeFormatter.ISO_ZONED_DATE_TIME);
-
-        // Extraer el objeto LocalTime
         LocalTime localTime = zonedDateTime.toLocalTime();
 
-        // Encontrar cliente por correo
         Cliente cliente = iClienteRepository.findByCorreo(request.getCorreo())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
         List<Evento> list = cliente.getEventos();
-
-        // Calcular precio
+        List<DetalleFactura> detalleFacturaList = new ArrayList<>();
+        List<EventoServicio> eventoServicioList = new ArrayList<>();
         BigDecimal precio = Arrays.stream(request.getCart())
                 .map(CarritoRequest::getCosto)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // Calcular IVA
         BigDecimal iva = precio.multiply(new BigDecimal("0.15"));
         BigDecimal totalPrecio = precio.add(iva);
 
-        // Crear lista de EventoServicio
-        List<EventoServicio> eventoServicioList = new ArrayList<>();
-
-        //Codigo para evento
         UUID uuid = UUID.randomUUID();
 
-        // Crear y guardar evento
         Evento evento = Evento.builder()
                 .codigo("EVENT-" + uuid.toString().substring(0, 8))
                 .estado("ACTIVO")
@@ -221,7 +223,7 @@ public class EventoService {
                 .pais(request.getPais())
                 .referenciaDireccion(request.getReferencia())
                 .region(request.getCiudad())
-                .precio(request.getTotal())
+                .precio(totalPrecio)
                 .iva(iva)
                 .hora(localTime)
                 .cliente(cliente)
@@ -229,7 +231,6 @@ public class EventoService {
 
         iEventoRepository.save(evento);
 
-        // Crear lista de EventoServicio
         for (CarritoRequest carritoRequest : request.getCart()) {
             Servicio servicio = iServicioRepository.findByCodigo(carritoRequest.getCodigo())
                     .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
@@ -242,6 +243,16 @@ public class EventoService {
                     .build();
 
             eventoServicioList.add(eventoServicio);
+
+            DetalleFactura detalleFactura = DetalleFactura.builder()
+                    .precioUnitario(carritoRequest.getCosto())
+                    .cantidad(carritoRequest.getQuantity())
+                    .subTotal(carritoRequest.getCosto().multiply(BigDecimal.valueOf(carritoRequest.getQuantity())))
+                    .factura(null)  // La factura se asignará más tarde
+                    .servicios(new HashSet<>(Collections.singletonList(servicio)))
+                    .evento(evento)
+                    .build();
+            detalleFacturaList.add(detalleFactura);
         }
 
         if (Integer.parseInt(request.getAsistentes()) > 100) {
@@ -252,47 +263,35 @@ public class EventoService {
                     .build());
         }
 
+
         iEventoServicioRepository.saveAll(eventoServicioList);
 
+        if (Integer.parseInt(request.getAsistentes()) > 100) {
+            Patrocinador patrocinador = iPatrocinadorRepository.findAll().get(0);
+            iEventoPatrocinadorRepository.save(EventoPatrocinador.builder()
+                    .evento(evento)
+                    .patrocinador(patrocinador)
+                    .build());
+        }
+
+        iEventoServicioRepository.saveAll(eventoServicioList);
         list.add(evento);
         cliente.setEventos(list);
         iClienteRepository.save(cliente);
 
+        iDetalleFacturaRepository.saveAll(detalleFacturaList);
+        evento.setDetallesFactura(detalleFacturaList);
+
+
         BigDecimal pagoMonto = request.getPago();
 
-        if (Objects.equals(pagoMonto, request.getTotal())) {
-            // Crear y guardar el primer pago
-            Pago pago = Pago.builder()
-                    .fecha(Date.valueOf(LocalDate.now()))
-                    .monto(pagoMonto)
-                    .evento(evento)
-                    .metodoPago(MetodoPago.Tarjeta)
-                    .tarjeta(cliente.getTarjetas().get(cliente.getTarjetas().size() - 1))
-                    .build();
-            iPagoRepository.save(pago);
-
-            // Crear y guardar el segundo pago
-            Pago pago2 = Pago.builder()
-                    .fecha(Date.valueOf(LocalDate.now()))
-                    .monto(pagoMonto)
-                    .evento(evento)
-                    .metodoPago(MetodoPago.Tarjeta)
-                    .tarjeta(cliente.getTarjetas().get(cliente.getTarjetas().size() - 1))
-                    .build();
-            iPagoRepository.save(pago2);
-        } else {
-            // Crear y guardar un solo pago
-            Pago pago = Pago.builder()
-                    .fecha(Date.valueOf(LocalDate.now()))
-                    .monto(pagoMonto)
-                    .evento(evento)
-                    .metodoPago(MetodoPago.Tarjeta)
-                    .tarjeta(cliente.getTarjetas().get(cliente.getTarjetas().size() - 1))
-                    .build();
-            iPagoRepository.save(pago);
-        }
-
         try {
+            if (Objects.equals(pagoMonto, request.getTotal())) {
+                pagoService.generarPago(evento, pagoMonto, true);
+            } else {
+                pagoService.generarPago(evento, pagoMonto, false);
+            }
+
             camionService.reservarCamion(totalServicios, evento);
             transporteService.reservarTransporte(Integer.parseInt(request.getAsistentes()), evento);
         } catch (Exception e) {

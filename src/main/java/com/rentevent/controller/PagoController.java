@@ -21,13 +21,8 @@ public class PagoController {
 
     @PostMapping(value = "/nuevo")
     public ResponseEntity<?> generarPagosCompletados(@RequestBody PagoRequest request) {
-        System.out.println("\n\n\n\n\n\n");
-        System.out.println(request.toString());
-        System.out.println("\n\n\n\n\n\n");
-
-
         try {
-            pagoService.generarPago(request);
+//            pagoService.generarPago(request);
             return ResponseEntity.accepted().body("hola");
 
         } catch (Exception e) {

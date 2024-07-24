@@ -1,6 +1,7 @@
 package com.rentevent.model.detalle_factura;
 
 import com.rentevent.model.camion.Camion;
+import com.rentevent.model.evento.Evento;
 import com.rentevent.model.factura.Factura;
 import com.rentevent.model.servicio.Servicio;
 import com.rentevent.model.transporte.Transporte;
@@ -27,17 +28,17 @@ public class DetalleFactura {
     @Column(name = "defa_id")
     private Integer id;
 
-    @Column(name = "defa_precio_unitario", nullable = false)
+    @Column(name = "defa_precio_unitario")
     private BigDecimal precioUnitario;
 
-    @Column(name = "defa_cantidad", nullable = false)
+    @Column(name = "defa_cantidad")
     private Integer cantidad;
 
-    @Column(name = "defa_sub_total", nullable = false)
+    @Column(name = "defa_sub_total")
     private BigDecimal subTotal;
 
     @ManyToOne
-    @JoinColumn(name = "fact_id", nullable = false)
+    @JoinColumn(name = "fact_id")
     private Factura factura;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.ALL })
@@ -47,14 +48,6 @@ public class DetalleFactura {
             inverseJoinColumns = @JoinColumn(name = "serv_id")
     )
     private Set<Servicio> servicios = new HashSet<>();
-
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.ALL })
-    @JoinTable(
-            name = "defactura_utileria",
-            joinColumns = @JoinColumn(name = "defa_id"),
-            inverseJoinColumns = @JoinColumn(name = "util_id")
-    )
-    private Set<Utileria> utilerias = new HashSet<>();
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.ALL })
     @JoinTable(
@@ -71,4 +64,9 @@ public class DetalleFactura {
             inverseJoinColumns = @JoinColumn(name = "cami_id")
     )
     private Set<Camion> camiones = new HashSet<>();
+
+    @ManyToOne (cascade = CascadeType.ALL)
+    @JoinColumn(name = "even_id")
+    private Evento evento;
+
 }

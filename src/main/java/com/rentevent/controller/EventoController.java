@@ -42,7 +42,6 @@ public class EventoController {
     }
     @GetMapping(value = "/listarTodos/{correo}")
     public ResponseEntity<?> listarEventosDeCliente(@PathVariable String correo) {
-        System.out.println(correo);
         try {
             List<EventoResponse> lista = this.eventoService.listarEventosDeCliente(correo);
             return ResponseEntity.ok().body(lista);

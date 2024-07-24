@@ -2,13 +2,18 @@ package com.rentevent.service;
 
 import com.rentevent.model.camion.Camion;
 import com.rentevent.model.camion.CamionEvento;
+import com.rentevent.model.detalle_factura.DetalleFactura;
 import com.rentevent.model.evento.Evento;
-import com.rentevent.repository.*;
+import com.rentevent.repository.ICamionEventoRepository;
+import com.rentevent.repository.ICamionRepository;
+import com.rentevent.repository.IDetalleFacturaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,18 +24,20 @@ public class CamionService {
     @Autowired
     private final ICamionRepository iCamionRepository;
     private final ICamionEventoRepository iCamionEventoRepository;
+    private final IDetalleFacturaRepository iDetalleFacturaRepository;
+
 
     /**
-     * Reserva camiones para un evento específico basado en la cantidad de utilería solicitada.
-     * Este método calcula el número de camiones necesarios basándose en una regla de 1 camión por cada 20 sillas.
+     * Reserva camiones para un evento específico basado en la cantidad de servicios solicitados.
+     * Este método calcula el número de camiones necesarios basándose en una regla de 1 camión por cada 2 servicios.
      * Selecciona aleatoriamente los camiones disponibles y los asocia con el evento.
      *
-     * @param request La cantidad de utilería solicitada para el evento.
-     * @param evento  El evento para el cual se reservan los camiones.
+     * @param servicios La cantidad de servicios solicitados para el evento.
+     * @param evento    El evento para el cual se reservan los camiones.
      * @throws Exception Si no hay camiones registrados o no hay suficientes camiones disponibles.
      */
     @Transactional
-    public void reservarCamion(Integer request, Evento evento) throws Exception {
+    public void reservarCamion(int totalServicios, Evento evento) throws Exception {
         List<Camion> camionList = iCamionRepository.findAll();
         int totalCamionesDisponibles = camionList.size();
 
@@ -38,14 +45,12 @@ public class CamionService {
             throw new Exception("No hay camiones registrados.");
         }
 
-        // Calcula el número de camiones necesarios (1 camión por cada 20 sillas)
-        int camionesNecesarios = (int) Math.ceil(request / 20.0);
+        int camionesNecesarios = (int) Math.ceil(totalServicios / 2.0);
 
         if (camionesNecesarios > totalCamionesDisponibles) {
-            throw new Exception("No hay suficientes camiones disponibles para la cantidad de utileria solicitada.");
+            throw new Exception("No hay suficientes camiones disponibles para la cantidad de utilería solicitada.");
         }
 
-        // Conjunto para almacenar los camiones seleccionados sin repetir
         Set<Camion> camionesReservados = new HashSet<>();
 
         while (camionesReservados.size() < camionesNecesarios) {
@@ -53,18 +58,26 @@ public class CamionService {
             camionesReservados.add(camionList.get(camionRandomIndex));
         }
 
-        // Aquí puedes procesar la reserva de los camiones en el evento
         for (Camion camion : camionesReservados) {
-            // Lógica para asociar el camión con el evento, por ejemplo:
-            camionesReservados.forEach(cami ->
-                    iCamionEventoRepository.save(
-                            CamionEvento.builder()
-                                    .camion(cami)
-                                    .evento(evento)
-                                    .build())
+            iCamionEventoRepository.save(
+                    CamionEvento.builder()
+                            .camion(camion)
+                            .evento(evento)
+                            .build()
             );
+
+            DetalleFactura detalleFactura = DetalleFactura.builder()
+                    .precioUnitario(new BigDecimal(5.5))
+                    .cantidad(1)
+                    .evento(evento)
+                    .subTotal(new BigDecimal(5.5))
+                    .factura(null)  // La factura se asignará más tarde
+                    .camiones(new HashSet<>(Collections.singletonList(camion)))
+                    .build();
+            iDetalleFacturaRepository.save(detalleFactura);
 
             System.out.println("Camión reservado: " + camion.getId());
         }
     }
+
 }

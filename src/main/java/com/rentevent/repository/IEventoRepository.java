@@ -16,6 +16,7 @@ public interface IEventoRepository extends JpaRepository<Evento, Integer> {
     List<Evento> findByClienteOrderByIdDesc(Cliente cliente);
 
     List<Evento> getAllByCliente(Cliente cliente);
+    List<Evento> getAllByClienteOrderByFechaDesc(Cliente cliente);
 
     Optional<Evento> findByCodigo(String codigo);
 

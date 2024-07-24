@@ -15,9 +15,9 @@ public class FacturaController {
     @Autowired
     private final FacturaService facturaService;
 
-    @GetMapping(value = "/recuperar")
-    public void generarFacutura(@RequestBody DatosFacturacionRequest request) {
-        facturaService.generarFactura(request);
-    }
+//    @GetMapping(value = "/recuperar")
+//    public void generarFacutura(@RequestBody DatosFacturacionRequest request) {
+//        facturaService.generarFactura(request);
+//    }
 
 }

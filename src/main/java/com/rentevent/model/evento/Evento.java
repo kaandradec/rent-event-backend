@@ -2,6 +2,7 @@ package com.rentevent.model.evento;
 
 import com.rentevent.model.camion.CamionEvento;
 import com.rentevent.model.cliente.Cliente;
+import com.rentevent.model.detalle_factura.DetalleFactura;
 import com.rentevent.model.incidencia.Incidencia;
 import com.rentevent.model.pago.Pago;
 import com.rentevent.model.resenia.Resenia;
@@ -86,13 +87,13 @@ public class Evento {
     private List<EventoTransporte> eventoTransportes;
 
     @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
-    private List<EventoUtileria> eventoUtilerias;
-
-    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<EventoServicio> eventoServicios;
 
     @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<EventoPatrocinador> eventoPatrocinadores;
+
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
+    private List<DetalleFactura> detallesFactura;
 
     @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<Resenia> resenias;

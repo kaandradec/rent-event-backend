@@ -36,8 +36,8 @@ public class Proveedor {
     private List<Camion> camiones;
     @OneToMany(mappedBy = "proveedor")
     private List<Transporte> transportes;
-    @OneToMany(mappedBy = "proveedor")
-    private List<Utileria> utilerias;
+//    @OneToMany(mappedBy = "proveedor")
+//    private List<Utileria> utilerias;
     @OneToMany(mappedBy = "proveedor")
     @JsonBackReference
     private List<Servicio> servicios;

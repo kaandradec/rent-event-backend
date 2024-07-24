@@ -3,20 +3,23 @@ package com.rentevent.service;
 import com.rentevent.dto.request.DatosFacturacionRequest;
 import com.rentevent.dto.request.ValidarPagoRequest;
 import com.rentevent.exception.NotFoundException;
+import com.rentevent.model.camion.Camion;
 import com.rentevent.model.cliente.Cliente;
 import com.rentevent.model.datos_facturacion.DatosFacturacion;
+import com.rentevent.model.detalle_factura.DetalleFactura;
 import com.rentevent.model.evento.Evento;
+import com.rentevent.model.evento.EventoServicio;
 import com.rentevent.model.factura.Factura;
-import com.rentevent.repository.IClienteRepository;
-import com.rentevent.repository.IDatosFacuturacionRepository;
-import com.rentevent.repository.IEventoRepository;
-import com.rentevent.repository.IFacturaRepository;
+import com.rentevent.model.pago.Pago;
+import com.rentevent.model.servicio.Servicio;
+import com.rentevent.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +29,14 @@ public class FacturaService {
     private final IClienteRepository iClienteRepository;
     private final IDatosFacuturacionRepository iDatosFacuturacionRepository;
     private final IEventoRepository iEventoRepository;
+    @Autowired
+    private final IDetalleFacturaRepository iDetalleFacturaRepository;
+    @Autowired
+    private final IServicioRepository iServicioRepository;
+    @Autowired
+    private final ITransporteRepository iTransporteRepository;
+    @Autowired
+    private final ICamionRepository iCamionRepository;
 
     /**
      * Genera una factura para un cliente basado en los datos de facturación proporcionados.
@@ -74,10 +85,81 @@ public class FacturaService {
 
     }
 
-    public Boolean validarExisteFactura(ValidarPagoRequest request) {
-        //devuelve True si esta pagado
-        return this.pedirFactura(request).isPresent();
+
+    @Transactional
+    public Factura generarFactura(Evento evento, List<Pago> pagos) {
+        List<DetalleFactura> detalles = evento.getDetallesFactura();
+        DatosFacturacion datosFacturacion = evento.getCliente().getDatosFacturacion();
+        Factura factura = Factura.builder()
+                .fechaEmision(new Date())
+                .total(evento.getPrecio())
+                .iva(evento.getIva())
+                .numero("FAC-" + UUID.randomUUID().toString().substring(0, 8))
+                .nombreCliente(datosFacturacion.getNombreCliente())
+                .cedulaCliente(datosFacturacion.getCedulaCliente())
+                .direccionCliente(datosFacturacion.getDireccionCliente())
+                .rucEmpresa("100000001")
+                .empresa("Rent-Event S.A.")
+                .direccionEmpresa("Universidad Central del Ecuador, Av. Universitaria, Quito 170129")
+                .cliente(evento.getCliente())
+                .build();
+
+        iFacturaRepository.save(factura);
+
+        for (DetalleFactura detalle : detalles) {
+            detalle.setFactura(factura);
+            iDetalleFacturaRepository.save(detalle);
+        }
+
+        for (Pago pago : pagos) {
+            pago.setFactura(factura);
+        }
+
+        return factura;
     }
+
+
+    /**
+     * Genera una factura para un evento específico.
+     *
+     * @param evento  El evento para el cual se generará la factura.
+     * @param cliente El cliente al que pertenece la factura.
+     * @return La factura generada.
+     */
+//    public Factura generarFactura(Evento evento, Cliente cliente) {
+//        Factura factura = Factura.builder()
+//                .fechaEmision(new Date())
+//                .total(evento.getPrecio().add(evento.getIva()))
+//                .iva(evento.getIva())
+//                .numero(UUID.randomUUID().toString())
+//                .nombreCliente(cliente.getDatosFacturacion().getNombreCliente())
+//                .cedulaCliente(cliente.getDatosFacturacion().getCedulaCliente())
+//                .direccionCliente(cliente.getDatosFacturacion().getDireccionCliente())
+//                .rucEmpresa("100000001")
+//                .empresa("Rent-Event S.A.")
+//                .direccionEmpresa("Universidad Central del Ecuador, Av. Universitaria, Quito 170129")
+//                .cliente(cliente)
+//                .build();
+//
+//        factura = iFacturaRepository.save(factura);
+//
+//        List<DetalleFactura> detalleFacturas = new ArrayList<>();
+//        for (EventoServicio eventoServicio : evento.getEventoServicios()) {
+//            Servicio servicio = eventoServicio.getServicio();
+//            DetalleFactura detalle = DetalleFactura.builder()
+//                    .precioUnitario(servicio.getCosto())
+//                    .cantidad(eventoServicio.getCantidad())
+//                    .subTotal(servicio.getCosto().multiply(new BigDecimal(eventoServicio.getCantidad())))
+//                    .factura(factura)
+//                    .build();
+//            detalle.getServicios().add(servicio);
+//            detalleFacturas.add(detalle);
+//        }
+//
+//        iDetalleFacturaRepository.saveAll(detalleFacturas);
+//        factura.setDetalleFacturas(detalleFacturas);
+//        return factura;
+//    }
 
     /**
      * Solicita la factura asociada a un pago específico de un evento.
@@ -107,5 +189,8 @@ public class FacturaService {
         );
     }
 
-
+    public Boolean validarExisteFactura(ValidarPagoRequest request) {
+        //devuelve True si esta pagado
+        return this.pedirFactura(request).isPresent();
+    }
 }

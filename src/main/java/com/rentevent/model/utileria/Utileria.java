@@ -38,9 +38,9 @@ public class Utileria {
     @Column(name = "util_precio_proveedor", nullable = false)
     private String precioProveedor;
 
-    @OneToMany(mappedBy = "utileria")
-    private List<EventoUtileria> eventoUtilerias;
-    @ManyToOne
-    @JoinColumn(name = "prov_id", nullable = false)
-    private Proveedor proveedor;
+//    @OneToMany(mappedBy = "utileria")
+//    private List<EventoUtileria> eventoUtilerias;
+//    @ManyToOne
+//    @JoinColumn(name = "prov_id", nullable = false)
+//    private Proveedor proveedor;
 }
