@@ -84,7 +84,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://rent-event-frontend-msei.vercel.app")
+                        .allowedOrigins("/*","https://rent-event-frontend-msei.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true)
                         .allowedHeaders("*"); // Asegura que todos los encabezados sean permitidos
