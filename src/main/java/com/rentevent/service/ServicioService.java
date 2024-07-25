@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-// Lombok genera un constructor con los atributos marcados como final, hace que no sea necesario inyectar las dependencias con @Autowired
 public class ServicioService {
     @Autowired
     private final IServicioRepository servicioRepository;

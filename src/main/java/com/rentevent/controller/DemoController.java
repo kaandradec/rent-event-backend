@@ -20,7 +20,7 @@ public class DemoController {
         Dotenv dotenv = Dotenv.load();
         apiKey = dotenv.get("API_KEY");
 
-        return ResponseEntity.ok("API-KEY desde archivo .env -> " + apiKey);
+        return ResponseEntity.ok("API-KEY desde archivo  -> " + apiKey);
     }
 
 //    @GetMapping(value = "{codigo}")

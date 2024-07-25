@@ -8,6 +8,7 @@ import com.rentevent.repository.ICamionRepository;
 import com.rentevent.repository.IPatrocinadorRepository;
 import com.rentevent.repository.IProveedorRepository;
 import com.rentevent.repository.ITransporteRepository;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
