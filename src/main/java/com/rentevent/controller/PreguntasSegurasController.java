@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/security/preguntasseguras")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"})
+//@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"})
 public class PreguntasSegurasController {
     @Autowired
     private final PreguntaSeguraService preguntaSeguraService;

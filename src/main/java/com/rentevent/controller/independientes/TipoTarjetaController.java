@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/tipos-tarjetas")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"})
+//@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"})
 public class TipoTarjetaController {
     @Autowired
     TipoTarjetaService tipoTarjetaService;

@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173"})public class UsuarioController {
+//@CrossOrigin(origins = {"http://localhost:5173"})
+public class UsuarioController {
     @Autowired
     UsuarioService usuarioService;
     @GetMapping(value = "/{user}")
