@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = {"http://localhost:5173"})
+@CrossOrigin(origins = "https://rent-event-frontend-msei.vercel.app")
 public class UsuarioController {
     @Autowired
     UsuarioService usuarioService;

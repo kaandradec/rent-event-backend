@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/eventos")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = {"http://localhost:5173"})
+@CrossOrigin(origins = "https://rent-event-frontend-msei.vercel.app")
 public class EventoController {
     @Autowired
     private final EventoService eventoService;

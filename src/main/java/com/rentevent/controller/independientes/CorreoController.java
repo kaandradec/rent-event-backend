@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/correo")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"})
+@CrossOrigin(origins = "https://rent-event-frontend-msei.vercel.app")
 public class CorreoController {
     @Autowired
     CorreoService correoService;

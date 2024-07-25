@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/facturas")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = {"http://localhost:5173"})
+@CrossOrigin(origins = "https://rent-event-frontend-msei.vercel.app")
 // Permite el acceso a los recursos desde el servidor local de React: Vite -> http://localhost:5173
 public class FacturaController {
     @Autowired

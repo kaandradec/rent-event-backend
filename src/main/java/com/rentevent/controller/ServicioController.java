@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/servicios")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = {"http://localhost:5173"})
+@CrossOrigin(origins = "https://rent-event-frontend-msei.vercel.app")
 public class ServicioController {
     private final ServicioService servicioService;
 
