@@ -84,7 +84,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://g2hk2mnk-5173.brs.devtunnels.ms/","http://172.22.144.1:5173/")  // Permite todos los orígenes
+                        .allowedOrigins("https://g2hk2mnk-5173.brs.devtunnels.ms","http://172.22.144.1:5173/")  // Permite todos los orígenes
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true);
             }
