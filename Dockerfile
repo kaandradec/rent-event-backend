@@ -14,8 +14,10 @@
 # Usa una imagen oficial de OpenJDK 17 como imagen base
 FROM openjdk:17-oracle
 
-# Copia el archivo JAR desde la etapa de construcción al contenedor
-COPY --from=build /app/target/*.jar /app/app.jar
+ARG JAR_FILE=target/*.jar
+
+# Copy the JAR file from the build stage
+COPY ./target/RentEvent-0.0.1-SNAPSHOT.jar app.jar
 
 # Expone el puerto 8080
 EXPOSE 8080
