@@ -1,9 +1,11 @@
 package com.rentevent.controller;
 
 import com.rentevent.dto.request.DatosFacturacionRequest;
+import com.rentevent.dto.response.FacturaResponse;
 import com.rentevent.service.FacturaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,4 +22,15 @@ public class FacturaController {
 //        facturaService.generarFactura(request);
 //    }
 
+    @GetMapping("/obtener/{codigoEvento}")
+    private ResponseEntity<?> obtenerFacturaPorCodigoEvento(@PathVariable String codigoEvento) {
+        try {
+
+            FacturaResponse facturaResponse = this.facturaService.pedirFactura2(codigoEvento);
+            return ResponseEntity.ok().body(facturaResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

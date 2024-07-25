@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface IFacturaRepository extends JpaRepository<Factura, Integer> {
 
     Optional<Factura> findFacturasByPagos(Pago pago);
+
 }

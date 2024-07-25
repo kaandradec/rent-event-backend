@@ -2,6 +2,7 @@ package com.rentevent.service;
 
 import com.rentevent.dto.request.DatosFacturacionRequest;
 import com.rentevent.dto.request.ValidarPagoRequest;
+import com.rentevent.dto.response.FacturaResponse;
 import com.rentevent.exception.NotFoundException;
 import com.rentevent.model.camion.Camion;
 import com.rentevent.model.cliente.Cliente;
@@ -37,6 +38,9 @@ public class FacturaService {
     private final ITransporteRepository iTransporteRepository;
     @Autowired
     private final ICamionRepository iCamionRepository;
+
+    @Autowired
+    private final IPagoRepository iPagoRepository;
 
     /**
      * Genera una factura para un cliente basado en los datos de facturación proporcionados.
@@ -187,6 +191,26 @@ public class FacturaService {
         return iFacturaRepository.findFacturasByPagos(
                 evento.getPagos().get(0)//todo : x2
         );
+    }
+
+    public FacturaResponse pedirFactura2(String codigoEvento) {
+        Evento evento = iEventoRepository.findByCodigo(codigoEvento).orElseThrow(() -> new NotFoundException("Evento no encontrado"));
+
+        Pago pago = this.iPagoRepository.findByEvento(evento).get(0); // obtener el primer pago, tambien podria ser el segundo
+
+        Factura factura = pago.getFactura();
+        return FacturaResponse.builder()
+                .cedulaCliente(factura.getCedulaCliente())
+                .direccionCliente(factura.getDireccionCliente())
+                .direccionEmpresa(factura.getDireccionEmpresa())
+                .empresa(factura.getEmpresa())
+                .fechaEmision(factura.getFechaEmision())
+                .iva(factura.getIva())
+                .nombreCliente(factura.getNombreCliente())
+                .numero(factura.getNumero())
+                .rucEmpresa(factura.getRucEmpresa())
+                .montoTotal(factura.getTotal())
+                .build();
     }
 
     public Boolean validarExisteFactura(ValidarPagoRequest request) {
