@@ -20,9 +20,10 @@ public class CloudinaryConfig {
      */
     @Bean
     public Cloudinary cloudinary() {
-        String cloudName = "rentevent";
-        String apiKey = "157562421519581";
-        String apiSecret = "z7-ZXNO8B0FJKPRjXipYq6baODo";
+        Dotenv dotenv = Dotenv.load();
+        String cloudName = dotenv.get("CLOUD_NAME");
+        String apiKey = dotenv.get("API_KEY");
+        String apiSecret = dotenv.get("API_SECRET");
 
         final Map<String, String> config = new HashMap<>();
         config.put("cloud_name", cloudName);

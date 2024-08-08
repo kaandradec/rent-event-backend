@@ -11,5 +11,4 @@ import java.util.Optional;
 
 public interface IPagoRepository extends JpaRepository<Pago, Integer> {
     List<Pago> findByEvento(Evento evento);
-
 }
